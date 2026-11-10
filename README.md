@@ -45,6 +45,18 @@ Todo usuário criado no Supabase Auth nasce com um perfil **inativo**. Para libe
 update public.perfis set papel = 'admin', ativo = true where email = 'email-do-admin';
 ```
 
+### Edge Function `admin-usuarios`
+
+A tela **Usuários** cria contas e gera senhas temporárias pela função `supabase/functions/admin-usuarios`. Ela roda no servidor com a chave secreta, que o Supabase injeta sozinho e que nunca vai para o navegador. Só administradores ativos conseguem usá-la.
+
+**Implantação pelo painel:** Edge Functions → **Deploy a new function** → **Via Editor**:
+
+1. Nome: `admin-usuarios` (exatamente assim).
+2. Cole o conteúdo de `supabase/functions/admin-usuarios/index.ts` no lugar do código de exemplo.
+3. Deixe **Verify JWT** ligado e clique em **Deploy function**.
+
+**Pela CLI:** `supabase functions deploy admin-usuarios --project-ref <ref>`
+
 ## Dados de teste
 
 Use apenas dados fictícios em desenvolvimento. Seeds de teste, quando existirem, ficarão em `supabase/seed_*.sql` e serão identificados como fictícios.

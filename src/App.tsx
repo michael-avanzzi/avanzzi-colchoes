@@ -5,6 +5,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
 import { EmConstrucaoPage } from './pages/EmConstrucaoPage'
 import { LoginPage } from './pages/LoginPage'
+import { UsuariosPage } from './pages/UsuariosPage'
 
 export default function App() {
   return (
@@ -56,11 +57,7 @@ export default function App() {
               path="usuarios"
               element={
                 <ProtectedRoute papeis={['admin']}>
-                  <EmConstrucaoPage
-                    titulo="Usuários"
-                    etapa="Etapa 1 (próximo passo)"
-                    descricao="Cadastro de usuários, papéis e liberação de acesso."
-                  />
+                  <UsuariosPage />
                 </ProtectedRoute>
               }
             />
