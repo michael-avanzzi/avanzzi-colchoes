@@ -1,0 +1,452 @@
+/* Avanzzi Agendamentos — base visual.
+ * Marca: amarelo/laranja #FAA300, preto e branco (confirmar com o manual oficial). */
+
+:root {
+  --marca: #faa300;
+  --marca-escura: #d98c00;
+  --marca-suave: #fff4dc;
+  --preto: #111111;
+  --preto-2: #1c1c1c;
+
+  --fundo: #f6f6f4;
+  --superficie: #ffffff;
+  --borda: #e4e4e0;
+  --texto: #1a1a1a;
+  --texto-suave: #5e5e5a;
+
+  --sucesso: #1f8a4c;
+  --erro: #c62828;
+  --erro-suave: #fdecea;
+
+  --raio: 12px;
+  --sombra: 0 1px 2px rgb(0 0 0 / 6%), 0 4px 16px rgb(0 0 0 / 6%);
+  --lateral: 248px;
+
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color: var(--texto);
+  background: var(--fundo);
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--fundo);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--marca);
+  outline-offset: 2px;
+}
+
+/* ---------- Logo ---------- */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logo-texto strong {
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.logo-texto span {
+  font-size: 0.78rem;
+  color: var(--marca);
+  font-weight: 600;
+}
+
+.logo-grande .logo-texto strong {
+  font-size: 1.4rem;
+}
+
+/* ---------- Botões ---------- */
+
+.botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.botao:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.botao-primario {
+  background: var(--marca);
+  color: var(--preto);
+}
+
+.botao-primario:not(:disabled):hover {
+  background: var(--marca-escura);
+}
+
+.botao-texto {
+  background: transparent;
+  color: var(--texto-suave);
+}
+
+.botao-largo {
+  width: 100%;
+}
+
+.botao-icone {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.botao-icone:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+/* ---------- Formulários ---------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: var(--superficie);
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.campo input:focus {
+  border-color: var(--marca);
+}
+
+.alerta {
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.alerta-erro {
+  background: var(--erro-suave);
+  color: var(--erro);
+}
+
+/* ---------- Estados ---------- */
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.tela-cheia {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+}
+
+.carregando {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--texto-suave);
+}
+
+.vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 16px;
+  border: 1px dashed var(--borda);
+  border-radius: var(--raio);
+  background: var(--superficie);
+  text-align: center;
+  color: var(--texto-suave);
+}
+
+.vazio svg {
+  color: var(--marca);
+}
+
+.vazio strong {
+  color: var(--texto);
+}
+
+/* ---------- Login ---------- */
+
+.login {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 16px;
+  background:
+    radial-gradient(circle at 15% 10%, rgb(250 163 0 / 22%), transparent 45%),
+    var(--preto);
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  padding: 32px 24px;
+  border-radius: 18px;
+  background: var(--superficie);
+  box-shadow: 0 20px 60px rgb(0 0 0 / 35%);
+}
+
+.login-card .logo-texto strong {
+  color: var(--preto);
+}
+
+.login-titulo {
+  font-size: 1.3rem;
+}
+
+.login-subtitulo {
+  color: var(--texto-suave);
+  margin-bottom: 4px;
+}
+
+/* ---------- Layout do app ---------- */
+
+.app {
+  min-height: 100dvh;
+}
+
+.barra-lateral {
+  position: fixed;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: var(--lateral);
+  padding: 20px 14px;
+  background: var(--preto);
+  color: #fff;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 10px;
+  color: rgb(255 255 255 / 75%);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+}
+
+.menu-item.active {
+  background: var(--marca);
+  color: var(--preto);
+  font-weight: 700;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid rgb(255 255 255 / 12%);
+}
+
+.usuario-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--marca);
+  color: var(--preto);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.usuario-dados {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.usuario-dados strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+.usuario-dados span {
+  font-size: 0.78rem;
+  color: rgb(255 255 255 / 60%);
+}
+
+.conteudo {
+  margin-left: var(--lateral);
+  padding: 28px 32px;
+}
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1400px;
+}
+
+.pagina-cabecalho h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.menu-inferior {
+  display: none;
+}
+
+/* ---------- Celular ---------- */
+
+@media (max-width: 860px) {
+  .barra-lateral {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    height: 60px;
+    padding: 0 16px;
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .menu,
+  .usuario-dados,
+  .usuario-avatar {
+    display: none;
+  }
+
+  .usuario {
+    padding: 0;
+    border: 0;
+  }
+
+  .conteudo {
+    margin: 0;
+    padding: 16px 16px calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .menu-inferior {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 10;
+    display: flex;
+    padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+    background: var(--superficie);
+    border-top: 1px solid var(--borda);
+  }
+
+  .menu-inferior-item {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-height: 52px;
+    justify-content: center;
+    border-radius: 10px;
+    color: var(--texto-suave);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .menu-inferior-item.active {
+    color: var(--preto);
+    background: var(--marca-suave);
+  }
+
+  .menu-inferior-item.active svg {
+    color: var(--marca-escura);
+  }
+}
