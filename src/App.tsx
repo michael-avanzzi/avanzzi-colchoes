@@ -4,6 +4,8 @@ import { AuthProvider } from './auth/AuthProvider'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
 import { EmConstrucaoPage } from './pages/EmConstrucaoPage'
+import { CalendarioPage } from './pages/CalendarioPage'
+import { KanbanPage } from './pages/KanbanPage'
 import { LoginPage } from './pages/LoginPage'
 import { UsuariosPage } from './pages/UsuariosPage'
 
@@ -21,26 +23,8 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route
-              index
-              element={
-                <EmConstrucaoPage
-                  titulo="Kanban"
-                  etapa="Etapa 2"
-                  descricao="Cartões dos agendamentos organizados por etapa do atendimento."
-                />
-              }
-            />
-            <Route
-              path="calendario"
-              element={
-                <EmConstrucaoPage
-                  titulo="Calendário"
-                  etapa="Etapa 2"
-                  descricao="Visões diária, semanal e mensal, com filtro por vendedor e status."
-                />
-              }
-            />
+            <Route index element={<KanbanPage />} />
+            <Route path="calendario" element={<CalendarioPage />} />
             <Route
               path="painel"
               element={

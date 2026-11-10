@@ -1,0 +1,492 @@
+/* Etapa 2: Kanban, detalhe do agendamento e calendário. */
+
+/* ---------- Utilitários ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.primeira-maiuscula::first-letter {
+  text-transform: uppercase;
+}
+
+.pagina-larga {
+  max-width: none;
+}
+
+.botao-pequeno {
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.botao-perigo {
+  color: var(--erro);
+}
+
+.botao-perigo-cheio {
+  background: var(--erro);
+  color: #fff;
+}
+
+.spinner-suave {
+  color: var(--texto-suave);
+}
+
+.alerta-info {
+  background: #eef3fc;
+  color: #24508f;
+}
+
+.alerta-aviso {
+  background: var(--marca-suave);
+  color: #6b4500;
+}
+
+.campos-linha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+.barra-filtros {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filtro select {
+  min-height: 40px;
+  max-width: 100%;
+  padding: 0 12px;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  background: var(--superficie);
+}
+
+.navegacao-periodo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.segmentado {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 10px;
+  background: #ebebe7;
+}
+
+.segmentado button {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  font-weight: 600;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+
+.segmentado button.ativo {
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: var(--sombra);
+}
+
+/* ---------- Kanban ---------- */
+
+.kanban {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x proximity;
+}
+
+.coluna {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  border: 2px solid transparent;
+  border-radius: var(--raio);
+  background: #ecece8;
+  scroll-snap-align: start;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.coluna-aceita {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--cor) 45%, transparent);
+}
+
+.coluna-sobre {
+  border-color: var(--cor);
+  background: color-mix(in srgb, var(--cor) 14%, #ecece8);
+}
+
+.coluna-cabecalho {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 8px;
+}
+
+.coluna-cabecalho h2 {
+  flex: 1;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.coluna-ponto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cor);
+}
+
+.coluna-qtd {
+  min-width: 24px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--superficie);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.coluna-cartoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 8px 12px;
+}
+
+.coluna-vazia {
+  padding: 16px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.cartao-botao {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: grab;
+  touch-action: manipulation;
+}
+
+.cartao-botao.bloqueado {
+  cursor: pointer;
+}
+
+.cartao-botao.arrastando {
+  opacity: 0.35;
+}
+
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 12px;
+  border-left: 4px solid var(--cor);
+  border-radius: 10px;
+  background: var(--superficie);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 8%);
+}
+
+.cartao-botao:hover .cartao {
+  box-shadow: var(--sombra);
+}
+
+.cartao-flutuando {
+  cursor: grabbing;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 22%);
+  transform: rotate(2deg);
+}
+
+.cartao-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cartao-hora {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+}
+
+.cartao-categoria {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--marca-suave);
+  color: #8a5a00;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.cartao-cliente {
+  font-size: 0.98rem;
+  overflow-wrap: anywhere;
+}
+
+.cartao-vendedor {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+}
+
+/* ---------- Detalhe ---------- */
+
+.modal {
+  width: min(560px, calc(100vw - 32px));
+}
+
+.detalhe {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detalhe-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.etiqueta-coluna,
+.botao-etapa {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cor) 14%, white);
+  color: color-mix(in srgb, var(--cor) 80%, black);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.botao-etapa {
+  min-height: 38px;
+  border: 1px solid color-mix(in srgb, var(--cor) 35%, white);
+  cursor: pointer;
+}
+
+.botao-etapa:not(:disabled):hover {
+  background: color-mix(in srgb, var(--cor) 24%, white);
+}
+
+.abas {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--borda);
+}
+
+.aba {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  font-weight: 600;
+  color: var(--texto-suave);
+  cursor: pointer;
+}
+
+.aba.ativa {
+  border-bottom-color: var(--marca);
+  color: var(--texto);
+}
+
+.detalhe-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px 16px;
+  margin: 0;
+}
+
+.detalhe-info dt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.detalhe-info dd {
+  margin: 2px 0 0;
+  font-weight: 500;
+}
+
+.detalhe-info-largo {
+  grid-column: 1 / -1;
+}
+
+.pre {
+  white-space: pre-wrap;
+}
+
+.detalhe-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--raio);
+  background: var(--fundo);
+}
+
+.detalhe-bloco h3 {
+  font-size: 0.9rem;
+}
+
+.detalhe-destinos,
+.detalhe-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.detalhe-acoes .botao {
+  min-height: 40px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+}
+
+/* ---------- Histórico ---------- */
+
+.historico {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.historico-item {
+  position: relative;
+  padding: 0 0 16px 20px;
+  border-left: 2px solid var(--borda);
+}
+
+.historico-item::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: -6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--marca);
+}
+
+.historico-item:last-child {
+  border-left-color: transparent;
+}
+
+.historico-topo {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.historico-topo time {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.historico-campos {
+  margin: 6px 0 0;
+  padding-left: 18px;
+  font-size: 0.88rem;
+}
+
+.historico-campos s {
+  color: var(--texto-suave);
+}
+
+.historico-motivo {
+  margin-top: 4px;
+  font-size: 0.88rem;
+  font-style: italic;
+}
+
+/* ---------- Calendário (FullCalendar) ---------- */
+
+.calendario {
+  --fc-border-color: var(--borda);
+  --fc-today-bg-color: var(--marca-suave);
+  --fc-now-indicator-color: var(--erro);
+  --fc-button-bg-color: var(--superficie);
+  --fc-button-text-color: var(--texto);
+  --fc-button-border-color: var(--borda);
+  --fc-button-hover-bg-color: var(--fundo);
+  --fc-button-hover-border-color: var(--borda);
+  --fc-button-active-bg-color: var(--marca);
+  --fc-button-active-border-color: var(--marca);
+
+  padding: 12px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  background: var(--superficie);
+}
+
+.calendario .fc .fc-button {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.calendario .fc .fc-button-primary:not(:disabled).fc-button-active {
+  color: var(--preto);
+}
+
+.calendario .fc .fc-toolbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.calendario .fc-event {
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.calendario .fc-timegrid-slot {
+  height: 2.2em;
+}
+
+@media (max-width: 860px) {
+  .kanban {
+    grid-auto-columns: 82%;
+  }
+
+  .calendario {
+    padding: 8px;
+  }
+
+  .calendario .fc .fc-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .calendario .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+}

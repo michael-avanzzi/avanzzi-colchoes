@@ -59,7 +59,7 @@ A tela **Usuários** cria contas e gera senhas temporárias pela função `supab
 
 ## Dados de teste
 
-Use apenas dados fictícios em desenvolvimento. Seeds de teste, quando existirem, ficarão em `supabase/seed_*.sql` e serão identificados como fictícios.
+Use apenas dados fictícios em desenvolvimento e marque o nome do cliente com `(fictício)`. Antes do uso real, rode `supabase/limpar_dados_teste.sql` no SQL Editor: ele remove esses agendamentos e o histórico deles.
 
 ## Documentação
 

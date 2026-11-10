@@ -3,6 +3,7 @@ import { Check, Copy, KeyRound, Pencil, UserPlus } from 'lucide-react'
 
 import { useAuth } from '../auth/AuthProvider'
 import { Modal } from '../components/ui/Modal'
+import { invalidarCadastros } from '../hooks/useCadastros'
 import { mensagemDeErro } from '../lib/supabase'
 import {
   atualizarUsuario,
@@ -106,6 +107,7 @@ export function UsuariosPage() {
         setCopiado(false)
         setSenha(gerada)
       }
+      invalidarCadastros()
       setForm(null)
       await carregar()
     } catch (error) {
