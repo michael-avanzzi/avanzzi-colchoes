@@ -17,6 +17,7 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { useAuth } from '../auth/AuthProvider'
 import { AgendamentoModais, type EstadoModal } from '../components/agendamentos/AgendamentoModais'
 import { FiltroVendedor } from '../components/agendamentos/FiltroVendedor'
+import { Pendencias } from '../components/agendamentos/Pendencias'
 import { useAgendamentos } from '../hooks/useAgendamentos'
 import { useCadastros } from '../hooks/useCadastros'
 import {
@@ -159,6 +160,7 @@ export function KanbanPage() {
         {carregando && <span className="spinner spinner-suave" role="status" aria-label="Carregando" />}
       </div>
 
+      <Pendencias sinal={agendamentos} onAbrir={(id) => setModal({ tipo: 'detalhe', id })} />
       {erro && <p className="alerta alerta-erro" role="alert">{erro}</p>}
       {aviso && (
         <p className="alerta alerta-aviso" role="alert">

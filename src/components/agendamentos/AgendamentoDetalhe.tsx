@@ -15,6 +15,7 @@ import { useAuth } from '../../auth/AuthProvider'
 import { useCadastros } from '../../hooks/useCadastros'
 import {
   combinarDataHora,
+  formatarCompleto,
   formatarDataHora,
   formatarHora,
   formatarMoeda,
@@ -46,9 +47,11 @@ type Props = {
   agendamento: Agendamento
   acaoInicial?: AcaoDetalhe | null
   onAlterado: (a: Agendamento) => void
+  /** Abre outro agendamento (ex.: anterior/novo de um reagendamento). */
+  onAbrir?: (id: string) => void
 }
 
-export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlterado }: Props) {
+export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlterado, onAbrir }: Props) {
   const { perfil } = useAuth()
   const { nomeVendedor, nomeCategoria, vendedores } = useCadastros()
 
@@ -202,11 +205,42 @@ export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlter
             )}
           </dl>
 
-          {a.status === 'reagendado' && (
-            <p className="alerta alerta-info">Este horário foi reagendado. O novo agendamento está na agenda.</p>
+          {(a.comparecimento_em || a.resultado_em) && (
+            <ul className="detalhe-registros">
+              {a.comparecimento_em && a.comparecimento_por && (
+                <li>
+                  {a.status === 'nao_compareceu' ? 'Falta' : 'Comparecimento'} registrado por{' '}
+                  <strong>{nomeVendedor(a.comparecimento_por)}</strong> em {formatarCompleto(a.comparecimento_em)}
+                </li>
+              )}
+              {a.resultado_em && a.resultado_por && (
+                <li>
+                  Resultado informado por <strong>{nomeVendedor(a.resultado_por)}</strong> em{' '}
+                  {formatarCompleto(a.resultado_em)}
+                </li>
+              )}
+            </ul>
+          )}
+
+          {a.reagendado_para_id && (
+            <p className="alerta alerta-info">
+              Este horário foi reagendado.{' '}
+              {onAbrir && (
+                <button type="button" className="botao-link" onClick={() => onAbrir(a.reagendado_para_id!)}>
+                  Ver o novo agendamento
+                </button>
+              )}
+            </p>
           )}
           {a.reagendado_de_id && (
-            <p className="alerta alerta-info">Criado a partir de um reagendamento.</p>
+            <p className="alerta alerta-info">
+              Criado a partir de um reagendamento.{' '}
+              {onAbrir && (
+                <button type="button" className="botao-link" onClick={() => onAbrir(a.reagendado_de_id!)}>
+                  Ver o horário anterior
+                </button>
+              )}
+            </p>
           )}
 
           {editavel && !acao && (

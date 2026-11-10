@@ -123,7 +123,15 @@ Deno.serve(async (req: Request) => {
       // O trigger já criou o perfil inativo; aqui ele é liberado com o papel escolhido.
       const { error: perfilError } = await admin
         .from("perfis")
-        .update({ nome, telefone, papel, ativo: true, atualizado_em: new Date().toISOString() })
+        .update({
+          nome,
+          telefone,
+          papel,
+          ativo: true,
+          atualizado_em: new Date().toISOString(),
+          // Autor para a auditoria (a chave secreta não tem auth.uid()).
+          atualizado_por: chamador.id,
+        })
         .eq("id", criado.user.id);
       if (perfilError) throw perfilError;
 
@@ -145,6 +153,12 @@ Deno.serve(async (req: Request) => {
         app_metadata: { trocar_senha: true },
       });
       if (updError) throw updError;
+
+      // A senha não fica em perfis; o registro de auditoria é gravado direto.
+      const { error: auditError } = await admin
+        .from("perfil_eventos")
+        .insert({ perfil_id: alvo.id, tipo: "senha_redefinida", usuario_id: chamador.id });
+      if (auditError) console.error("[admin-usuarios] auditoria", auditError.message);
 
       return responder({ ok: true, id: alvo.id, email: alvo.email, senha_temporaria: senha });
     }

@@ -20,6 +20,28 @@ export async function listarAgendamentos(inicio: Date, fim: Date): Promise<Agend
   return data as Agendamento[]
 }
 
+export async function buscarAgendamento(id: string): Promise<Agendamento | null> {
+  const { data, error } = await supabase.from('agendamentos').select('*').eq('id', id).maybeSingle()
+  if (error) throw error
+  return data as Agendamento | null
+}
+
+/**
+ * Atendimentos de dias anteriores que ficaram sem desfecho: comparecimento
+ * não registrado ou resultado da venda pendente. Distorcem os indicadores.
+ */
+export async function listarPendencias(antesDe: Date): Promise<Agendamento[]> {
+  const { data, error } = await supabase
+    .from('agendamentos')
+    .select('*')
+    .lt('inicio', antesDe.toISOString())
+    .or('status.in.(agendado,confirmado),and(status.eq.compareceu,resultado.eq.pendente)')
+    .order('inicio')
+    .limit(500)
+  if (error) throw error
+  return data as Agendamento[]
+}
+
 export async function listarCategorias(): Promise<Categoria[]> {
   const { data, error } = await supabase
     .from('categorias_produto')

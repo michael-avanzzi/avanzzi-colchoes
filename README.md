@@ -28,6 +28,12 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 |---|---|
 | `20261110_01_fundacao.sql` | Tipos, perfis, categorias, agendamentos, histórico imutável, RLS e Realtime |
 | `20261110_02_rpcs_agendamentos.sql` | Funções de escrita (`rpc_*`) com validação de papel, dono, conflito e versão |
+| `20261110_03_auditoria_usuarios.sql` | Histórico imutável de alterações de usuários (`perfil_eventos`); versão desatualizada passa a responder HTTP 409 |
+
+## Testes
+
+- **Front (Vitest):** `npm test` cobre as regras de etapa do Kanban, as permissões exibidas e as datas.
+- **Banco:** cole `supabase/testes/regras_agendamento.sql` no SQL Editor e rode. São 32 verificações: criação, conflito, edição simultânea, histórico, reagendamento, cancelamento, comparecimento, venda, troca de vendedor, imutabilidade e bloqueio de escrita direta. O script cria dados fictícios e **desfaz tudo** no final com um erro proposital. O resultado esperado é um erro que começa com `TESTES OK`.
 
 ### Regras de segurança
 
@@ -35,7 +41,7 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 - Todo `INSERT`/`UPDATE` em `agendamentos` gera um evento em `agendamento_eventos` na mesma transação, com quem fez a alteração, quando, o valor anterior, o novo valor e o motivo.
 - `agendamento_eventos` bloqueia `UPDATE` e `DELETE` por trigger.
 - **Reagendar** marca o registro atual como `reagendado` e cria um novo, ligado pelos campos `reagendado_de_id` e `reagendado_para_id`.
-- **Edição simultânea:** cada alteração envia a `versao` lida. Se outra pessoa alterou o registro antes, o banco recusa com o erro `P0409`.
+- **Edição simultânea:** cada alteração envia a `versao` lida. Se outra pessoa alterou o registro antes, o banco recusa com o erro `PT409` (HTTP 409).
 
 ### Primeiro administrador
 
