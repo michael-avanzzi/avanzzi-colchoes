@@ -1,3 +1,0 @@
-# Cloudflare Pages: aplicação de página única (SPA).
-# Qualquer rota (/calendario, /painel...) entrega o index.html.
-/*    /index.html   200

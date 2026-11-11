@@ -2,9 +2,9 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Versão exibida nos registros de erro: commit no Cloudflare Pages, data no build local.
-const versaoApp =
-  process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? `local-${new Date().toISOString().slice(0, 10)}`
+// Versão exibida nos registros de erro: commit no build do Cloudflare, data no build local.
+const commit = process.env.WORKERS_CI_COMMIT_SHA ?? process.env.CF_PAGES_COMMIT_SHA
+const versaoApp = commit?.slice(0, 7) ?? `local-${new Date().toISOString().slice(0, 10)}`
 
 export default defineConfig({
   define: {

@@ -5,7 +5,7 @@
 ## 1. Arquitetura em produção
 
 ```
-Navegador / PWA  ──HTTPS──▶  Cloudflare Pages (site estático: dist/)
+Navegador / PWA  ──HTTPS──▶  Cloudflare Worker avanzzi-colchoes (arquivos estáticos: dist/)
        │
        └──HTTPS + WebSocket──▶  Supabase (Postgres + Auth + Realtime + Edge Function)
 ```
@@ -27,25 +27,20 @@ No painel do projeto **Avanzzi Agendamentos**:
 6. **Edge Functions:** confirme que `admin-usuarios` está implantada com a versão atual do repositório.
 7. **Dados de teste:** rode `supabase/limpar_dados_teste.sql`. Ele remove os agendamentos com “(fictício)” no nome. Remova também, na tela Usuários, o acesso dos usuários de teste.
 
-## 3. Publicação no Cloudflare Pages (gratuito)
+## 3. Publicação no Cloudflare (Workers, somente arquivos estáticos)
 
-1. Crie uma conta em [dash.cloudflare.com](https://dash.cloudflare.com).
-2. Vá em **Workers & Pages → Create → Pages → Connect to Git** e escolha o repositório `avanzzi-colchoes`.
-3. Configuração do build:
+O site está no Cloudflare como **Worker `avanzzi-colchoes`**, conectado ao repositório `michael-avanzzi/avanzzi-colchoes`. **Cada push na `main` publica sozinho.**
 
-   | Campo | Valor |
-   |---|---|
-   | Framework preset | None |
-   | Build command | `npm run build` |
-   | Build output directory | `dist` |
-   | Variáveis de ambiente | `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (as mesmas do `.env.local`) e `NODE_VERSION` = `24` |
+| Configuração (Worker → Settings → Builds) | Valor |
+|---|---|
+| Build command | `npm run build` |
+| Deploy command | `npx wrangler deploy` (lê o `wrangler.jsonc` do repositório) |
+| Variables and secrets (de build) | `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` (as mesmas do `.env.local`) |
 
-4. **Save and Deploy.** Cada `git push` na `main` publica uma versão nova automaticamente. As pessoas que estiverem com o app aberto veem o aviso “Nova versão disponível”.
-5. (Opcional) **Custom domains:** aponte um subdomínio da Avanzzi, por exemplo `agenda.avanzzicolchoes.com.br`.
-
-O repositório já traz:
-- `public/_redirects`: faz as rotas `/calendario`, `/painel` etc. abrirem o app.
-- `public/_headers`: cabeçalhos de segurança (CSP, proteção contra iframe, HSTS). **Se o projeto Supabase mudar, atualize o endereço em `connect-src`.**
+- O `wrangler.jsonc` publica a pasta `dist/` e faz as rotas do app (`/calendario`, `/painel` etc.) abrirem o `index.html`.
+- O `public/_headers` aplica os cabeçalhos de segurança (CSP, proteção contra iframe, HSTS). **Se o projeto Supabase mudar, atualize o endereço em `connect-src`.**
+- Quem estiver com o app aberto vê o aviso “Nova versão disponível” depois de cada publicação.
+- (Opcional) Em **Domains & Routes**, dá para apontar um subdomínio da Avanzzi, por exemplo `agenda.avanzzicolchoes.com.br`.
 
 ## 4. Backup
 
@@ -70,7 +65,7 @@ supabase db dump --db-url "postgresql://postgres:[SENHA]@db.zfnnppvehwriijhqrsck
 
 | Situação | O que fazer |
 |---|---|
-| Site fora do ar ou versão com defeito | Cloudflare Pages → **Deployments** → escolher a versão anterior → **Rollback** |
+| Site fora do ar ou versão com defeito | Cloudflare → Worker `avanzzi-colchoes` → **Deployments** → versão anterior → **Rollback** |
 | Banco com dados apagados ou corrompidos | Plano Pro: **Database → Backups → Restore**. Backup manual: criar um projeto novo, rodar `backup-estrutura.sql` e depois `backup-dados.sql` no SQL Editor, e trocar a URL e a chave nas variáveis do Cloudflare |
 | Usuário esqueceu a senha | Tela **Usuários** → ícone de chave → gerar senha temporária |
 | Administrador perdeu o acesso | SQL Editor: `update public.perfis set papel = 'admin', ativo = true where email = '...';` |

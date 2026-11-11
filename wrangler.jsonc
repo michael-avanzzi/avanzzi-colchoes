@@ -1,0 +1,12 @@
+// Cloudflare Workers (somente arquivos estáticos): publica a pasta dist/.
+// O build roda no Cloudflare a cada push na main ("npm run build" e depois "npx wrangler deploy").
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "avanzzi-colchoes",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Rotas do app (/calendario, /painel...) entregam o index.html.
+    "not_found_handling": "single-page-application"
+  }
+}

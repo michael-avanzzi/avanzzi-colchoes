@@ -6,7 +6,7 @@ Agenda compartilhada de atendimentos da Avanzzi Colchões: Kanban, calendário, 
 
 - **Frontend:** React 19 + Vite + TypeScript, instalável como PWA (`vite-plugin-pwa`)
 - **Backend:** Supabase (Postgres, Auth, Realtime), região São Paulo (`sa-east-1`)
-- **Hospedagem prevista:** Cloudflare Pages (site estático)
+- **Hospedagem:** Cloudflare Worker `avanzzi-colchoes` (arquivos estáticos, publicação automática a cada push)
 
 ## Rodando localmente
 
@@ -72,5 +72,5 @@ Use apenas dados fictícios em desenvolvimento e marque o nome do cliente com `(
 ## Documentação
 
 - [docs/decisoes-pendentes.md](docs/decisoes-pendentes.md): regras de negócio que ainda dependem de validação da gestão
-- [docs/implantacao.md](docs/implantacao.md): publicação no Cloudflare Pages, checklist do Supabase, backup e recuperação
+- [docs/implantacao.md](docs/implantacao.md): publicação no Cloudflare, checklist do Supabase, backup e recuperação
 - [docs/homologacao.md](docs/homologacao.md): roteiro de testes com a equipe antes do uso real
