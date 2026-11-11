@@ -29,6 +29,8 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261110_01_fundacao.sql` | Tipos, perfis, categorias, agendamentos, histórico imutável, RLS e Realtime |
 | `20261110_02_rpcs_agendamentos.sql` | Funções de escrita (`rpc_*`) com validação de papel, dono, conflito e versão |
 | `20261110_03_auditoria_usuarios.sql` | Histórico imutável de alterações de usuários (`perfil_eventos`); versão desatualizada passa a responder HTTP 409 |
+| `20261111_04_indicadores.sql` | `rpc_indicadores`: toda a regra de cálculo do Painel |
+| `20261111_05_registro_erros.sql` | Registro de erros do app (`erros_app`) e remoção do acesso de visitantes às funções |
 
 ## Testes
 
@@ -70,3 +72,5 @@ Use apenas dados fictícios em desenvolvimento e marque o nome do cliente com `(
 ## Documentação
 
 - [docs/decisoes-pendentes.md](docs/decisoes-pendentes.md): regras de negócio que ainda dependem de validação da gestão
+- [docs/implantacao.md](docs/implantacao.md): publicação no Cloudflare Pages, checklist do Supabase, backup e recuperação
+- [docs/homologacao.md](docs/homologacao.md): roteiro de testes com a equipe antes do uso real

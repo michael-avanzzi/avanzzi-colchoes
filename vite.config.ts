@@ -2,13 +2,21 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Versão exibida nos registros de erro: commit no Cloudflare Pages, data no build local.
+const versaoApp =
+  process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? `local-${new Date().toISOString().slice(0, 10)}`
+
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_VERSAO_APP': JSON.stringify(versaoApp),
+  },
   plugins: [
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['icons/icon.svg'],
+      includeAssets: ['icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'],
       manifest: {
+        id: '/',
         name: 'Avanzzi Agendamentos',
         short_name: 'Agendamentos',
         description: 'Agenda de atendimentos da Avanzzi Colchões.',
@@ -21,7 +29,10 @@ export default defineConfig({
         theme_color: '#111111',
         categories: ['business', 'productivity'],
         icons: [
-          // TODO: trocar pelos PNGs oficiais da marca (192, 512 e maskable).
+          // Provisórios: gerados de public/icons/icon.svg por `npm run icones`.
+          { src: '/icons/pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
           { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
         ],
       },
