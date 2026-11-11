@@ -3,10 +3,10 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthProvider'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
-import { EmConstrucaoPage } from './pages/EmConstrucaoPage'
 import { CalendarioPage } from './pages/CalendarioPage'
 import { KanbanPage } from './pages/KanbanPage'
 import { LoginPage } from './pages/LoginPage'
+import { PainelPage } from './pages/PainelPage'
 import { UsuariosPage } from './pages/UsuariosPage'
 
 export default function App() {
@@ -29,11 +29,7 @@ export default function App() {
               path="painel"
               element={
                 <ProtectedRoute papeis={['gerente', 'admin']}>
-                  <EmConstrucaoPage
-                    titulo="Painel de controle"
-                    etapa="Etapa 4"
-                    descricao="Agendamentos, comparecimento e conversão por período e por vendedor."
-                  />
+                  <PainelPage />
                 </ProtectedRoute>
               }
             />

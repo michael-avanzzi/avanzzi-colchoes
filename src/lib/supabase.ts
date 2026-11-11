@@ -21,6 +21,10 @@ export const supabase = createClient(url, publishableKey, {
 export function mensagemDeErro(error: unknown): string {
   if (error && typeof error === 'object' && 'message' in error) {
     const message = String((error as { message: unknown }).message)
+    const code = 'code' in error ? String((error as { code: unknown }).code) : ''
+    if (code === 'PGRST202') {
+      return 'Função do banco não encontrada. Aplique as migrações pendentes no Supabase.'
+    }
     if (message === 'Invalid login credentials') return 'E-mail ou senha incorretos.'
     if (message.includes('Failed to fetch')) return 'Sem conexão com o servidor. Verifique a internet.'
     return message
