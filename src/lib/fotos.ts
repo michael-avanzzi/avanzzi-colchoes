@@ -50,7 +50,7 @@ export async function trocarFoto(perfilId: string, arquivo: File, caminhoAnterio
 
   const { error: envio } = await supabase.storage
     .from(BUCKET)
-    .upload(caminho, blob, { contentType: 'image/webp', cacheControl: '31536000', upsert: false })
+    .upload(caminho, blob, { contentType: 'image/webp', cacheControl: '3600', upsert: false })
   if (envio) throw envio
 
   const { error } = await supabase.rpc('rpc_definir_foto', { p_perfil_id: perfilId, p_path: caminho })
