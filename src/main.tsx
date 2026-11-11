@@ -8,6 +8,7 @@ import { instalarCapturaGlobal } from './lib/erros'
 import './styles/index.css'
 import './styles/agenda.css'
 import './styles/painel.css'
+import './styles/perfil.css'
 
 instalarCapturaGlobal()
 

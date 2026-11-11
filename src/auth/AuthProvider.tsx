@@ -10,6 +10,7 @@ import {
 import type { Session } from '@supabase/supabase-js'
 
 import { supabase } from '../lib/supabase'
+import { desativarPush } from '../services/push.service'
 import type { MeuPerfil } from '../types/auth'
 
 type AuthContextValue = {
@@ -79,6 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = useCallback(async () => {
+    // Este aparelho deixa de receber lembretes da conta que está saindo.
+    await desativarPush().catch((error) => console.warn('[Auth] push:', error))
     await supabase.auth.signOut()
     setPerfil(null)
   }, [])

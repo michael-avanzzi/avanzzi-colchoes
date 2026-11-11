@@ -15,6 +15,7 @@ export type MeuPerfil =
       email: string
       telefone: string | null
       papel: Papel
+      foto_path?: string | null
       trocar_senha: boolean
     }
   | {

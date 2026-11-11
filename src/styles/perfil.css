@@ -1,0 +1,160 @@
+/* Fotos de perfil, lembretes e "Meu perfil". */
+
+.avatar {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--marca);
+  color: var(--preto);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Bloco do usuário no menu agora é um botão (abre "Meu perfil"). */
+button.usuario {
+  width: 100%;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+button.usuario:hover {
+  background: rgb(255 255 255 / 6%);
+}
+
+.barra-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ---------- Sino ---------- */
+
+.sino {
+  position: relative;
+}
+
+.sino-contador {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--erro);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.aviso-lembrete {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border: 1px solid var(--marca);
+  border-radius: 12px;
+  background: var(--superficie);
+  color: var(--texto);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 22%);
+  font-size: 0.92rem;
+}
+
+.aviso-lembrete > svg {
+  color: var(--marca-escura);
+}
+
+.aviso-lembrete > span {
+  flex: 1;
+  min-width: 200px;
+}
+
+.aviso-lembrete-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.item-lembrete {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-lembrete .item-pendencia {
+  flex: 1;
+}
+
+.notificacoes p {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+/* ---------- Meu perfil ---------- */
+
+.perfil-topo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.perfil-dados {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.perfil-dados strong {
+  font-size: 1.1rem;
+}
+
+.foto-edicao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 860px) {
+  .barra-topo {
+    flex: 1;
+  }
+
+  button.usuario {
+    width: auto;
+    padding: 4px;
+  }
+
+  .aviso-lembrete {
+    top: calc(68px + env(safe-area-inset-top));
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
+}

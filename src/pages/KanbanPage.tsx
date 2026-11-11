@@ -1,4 +1,5 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   DndContext,
   DragOverlay,
@@ -49,6 +50,18 @@ export function KanbanPage() {
   const [referencia, setReferencia] = useState(() => new Date(hoje))
   const [vendedor, setVendedor] = useState('')
   const [modal, setModal] = useState<EstadoModal>(null)
+  const [parametros, setParametros] = useSearchParams()
+
+  // Link de notificação/lembrete: /?agendamento=<id> abre o detalhe.
+  const idDoLink = parametros.get('agendamento')
+  useEffect(() => {
+    if (!idDoLink) return
+    const t = window.setTimeout(() => {
+      setModal({ tipo: 'detalhe', id: idDoLink })
+      setParametros({}, { replace: true })
+    }, 0)
+    return () => window.clearTimeout(t)
+  }, [idDoLink, setParametros])
   const [arrastando, setArrastando] = useState<Agendamento | null>(null)
   const [movendo, setMovendo] = useState<string | null>(null)
   const [aviso, setAviso] = useState<string | null>(null)

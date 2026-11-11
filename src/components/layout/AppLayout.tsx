@@ -1,16 +1,19 @@
+import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import {
   CalendarDays,
   KanbanSquare,
   LayoutDashboard,
-  LogOut,
   Users,
   type LucideIcon,
 } from 'lucide-react'
 
 import { useAuth } from '../../auth/AuthProvider'
 import { PAPEL_ROTULO, type Papel } from '../../types/auth'
+import { Avatar } from '../ui/Avatar'
+import { Lembretes } from './Lembretes'
 import { Logo } from './Logo'
+import { MeuPerfil } from './MeuPerfil'
 
 type ItemMenu = {
   to: string
@@ -27,7 +30,8 @@ const MENU: ItemMenu[] = [
 ]
 
 export function AppLayout() {
-  const { perfil, signOut } = useAuth()
+  const { perfil } = useAuth()
+  const [perfilAberto, setPerfilAberto] = useState(false)
   if (!perfil?.allowed) return null
 
   const itens = MENU.filter((item) => !item.papeis || item.papeis.includes(perfil.papel))
@@ -35,7 +39,11 @@ export function AppLayout() {
   return (
     <div className="app">
       <aside className="barra-lateral" aria-label="Menu principal">
-        <Logo />
+        <div className="barra-topo">
+          <Logo />
+          <Lembretes claro />
+        </div>
+
         <nav className="menu">
           {itens.map(({ to, rotulo, icone: Icone }) => (
             <NavLink key={to} to={to} end={to === '/'} className="menu-item">
@@ -45,24 +53,19 @@ export function AppLayout() {
           ))}
         </nav>
 
-        <div className="usuario">
-          <div className="usuario-avatar" aria-hidden>
-            {perfil.nome.trim().charAt(0).toUpperCase()}
-          </div>
-          <div className="usuario-dados">
+        <button
+          type="button"
+          className="usuario"
+          onClick={() => setPerfilAberto(true)}
+          aria-label="Meu perfil"
+          title="Meu perfil"
+        >
+          <Avatar nome={perfil.nome} fotoPath={perfil.foto_path} tamanho={36} className="usuario-avatar" />
+          <span className="usuario-dados">
             <strong>{perfil.nome}</strong>
             <span>{PAPEL_ROTULO[perfil.papel]}</span>
-          </div>
-          <button
-            type="button"
-            className="botao-icone"
-            onClick={() => void signOut()}
-            title="Sair"
-            aria-label="Sair"
-          >
-            <LogOut size={18} />
-          </button>
-        </div>
+          </span>
+        </button>
       </aside>
 
       <main className="conteudo">
@@ -77,6 +80,8 @@ export function AppLayout() {
           </NavLink>
         ))}
       </nav>
+
+      <MeuPerfil aberto={perfilAberto} onFechar={() => setPerfilAberto(false)} />
     </div>
   )
 }

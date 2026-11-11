@@ -14,7 +14,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'],
+      includeAssets: ['icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/favicon-32.png', 'push-sw.js'],
       manifest: {
         id: '/',
         name: 'Avanzzi Agendamentos',
@@ -38,6 +38,8 @@ export default defineConfig({
       },
       workbox: {
         cleanupOutdatedCaches: true,
+        // Recebe as notificações push dos lembretes.
+        importScripts: ['push-sw.js'],
         navigateFallback: 'index.html',
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [

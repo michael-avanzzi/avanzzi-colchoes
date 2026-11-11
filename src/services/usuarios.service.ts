@@ -10,6 +10,7 @@ export type Usuario = {
   telefone: string | null
   papel: Papel
   ativo: boolean
+  foto_path: string | null
   criado_em: string
 }
 
@@ -21,7 +22,7 @@ export type SenhaGerada = {
 export async function listarUsuarios(): Promise<Usuario[]> {
   const { data, error } = await supabase
     .from('perfis')
-    .select('id, nome, email, telefone, papel, ativo, criado_em')
+    .select('id, nome, email, telefone, papel, ativo, foto_path, criado_em')
     .order('ativo', { ascending: false })
     .order('nome')
   if (error) throw error

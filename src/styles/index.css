@@ -401,8 +401,7 @@ textarea {
   }
 
   .menu,
-  .usuario-dados,
-  .usuario-avatar {
+  .usuario-dados {
     display: none;
   }
 

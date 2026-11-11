@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
-import { Check, Copy, KeyRound, Pencil, UserPlus } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
+import { Camera, Check, Copy, KeyRound, Pencil, Trash2, UserPlus } from 'lucide-react'
 
 import { useAuth } from '../auth/AuthProvider'
+import { Avatar } from '../components/ui/Avatar'
 import { Modal } from '../components/ui/Modal'
 import { invalidarCadastros } from '../hooks/useCadastros'
+import { removerFoto, trocarFoto } from '../lib/fotos'
 import { mensagemDeErro } from '../lib/supabase'
 import {
   atualizarUsuario,
@@ -24,12 +26,15 @@ type Formulario = {
   telefone: string
   papel: Papel
   ativo: boolean
+  foto_path?: string | null
 }
 
 const VAZIO: Formulario = { nome: '', email: '', telefone: '', papel: 'vendedor', ativo: true }
 
 export function UsuariosPage() {
-  const { perfil } = useAuth()
+  const { perfil, recarregarPerfil } = useAuth()
+  const entradaFoto = useRef<HTMLInputElement>(null)
+  const [enviandoFoto, setEnviandoFoto] = useState(false)
   const meuId = perfil?.allowed ? perfil.id : null
 
   const [usuarios, setUsuarios] = useState<Usuario[]>([])
@@ -74,7 +79,7 @@ export function UsuariosPage() {
 
   function abrirEdicao(u: Usuario) {
     setErroForm(null)
-    setForm({ id: u.id, nome: u.nome, email: u.email, telefone: u.telefone ?? '', papel: u.papel, ativo: u.ativo })
+    setForm({ id: u.id, nome: u.nome, email: u.email, telefone: u.telefone ?? '', papel: u.papel, ativo: u.ativo, foto_path: u.foto_path })
   }
 
   async function salvar(event: FormEvent) {
@@ -114,6 +119,27 @@ export function UsuariosPage() {
       setErroForm(mensagemDeErro(error))
     } finally {
       setSalvando(false)
+    }
+  }
+
+  /** Troca (arquivo) ou remove (null) a foto do usuário em edição. Salva na hora. */
+  async function mudarFoto(arquivo: File | null | undefined) {
+    if (!form?.id || arquivo === undefined) return
+    setErroForm(null)
+    setEnviandoFoto(true)
+    try {
+      const novo = arquivo
+        ? await trocarFoto(form.id, arquivo, form.foto_path ?? null)
+        : (await removerFoto(form.id, form.foto_path ?? null), null)
+      setForm({ ...form, foto_path: novo })
+      invalidarCadastros()
+      if (form.id === meuId) await recarregarPerfil()
+      await carregar()
+    } catch (error) {
+      setErroForm(mensagemDeErro(error))
+    } finally {
+      setEnviandoFoto(false)
+      if (entradaFoto.current) entradaFoto.current.value = ''
     }
   }
 
@@ -178,9 +204,7 @@ export function UsuariosPage() {
         <ul className="lista-usuarios">
           {usuarios.map((u) => (
             <li key={u.id} className={u.ativo ? 'cartao-usuario' : 'cartao-usuario inativo'}>
-              <div className="usuario-avatar" aria-hidden>
-                {u.nome.trim().charAt(0).toUpperCase()}
-              </div>
+              <Avatar nome={u.nome} fotoPath={u.foto_path} tamanho={36} className="usuario-avatar" />
               <div className="cartao-usuario-dados">
                 <strong>
                   {u.nome}
@@ -222,6 +246,27 @@ export function UsuariosPage() {
       <Modal titulo={form?.id ? 'Editar usuário' : 'Novo usuário'} aberto={form !== null} onFechar={() => setForm(null)}>
         {form && (
           <form className="form" onSubmit={salvar} noValidate>
+            {form.id && (
+              <div className="foto-edicao">
+                <Avatar nome={form.nome || '?'} fotoPath={form.foto_path} tamanho={64} />
+                <input
+                  ref={entradaFoto}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  onChange={(e) => void mudarFoto(e.target.files?.[0])}
+                />
+                <button type="button" className="botao botao-secundario botao-pequeno" onClick={() => entradaFoto.current?.click()} disabled={enviandoFoto}>
+                  {enviandoFoto ? <span className="spinner" aria-hidden /> : <Camera size={16} aria-hidden />}
+                  {form.foto_path ? 'Trocar foto' : 'Adicionar foto'}
+                </button>
+                {form.foto_path && (
+                  <button type="button" className="botao-icone escuro" onClick={() => void mudarFoto(null)} disabled={enviandoFoto} aria-label="Remover foto" title="Remover foto">
+                    <Trash2 size={18} />
+                  </button>
+                )}
+              </div>
+            )}
             <label className="campo">
               <span>Nome</span>
               <input value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} autoFocus />
