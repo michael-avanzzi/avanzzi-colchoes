@@ -3,12 +3,18 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { rotuloDoGrupo } from '../../lib/periodos'
 import type { Agrupamento, MetricasPeriodo } from '../../services/indicadores.service'
 
-/** Três séries, nas três primeiras cores da paleta categórica validada (ordem fixa). */
+/**
+ * Três séries, nas três primeiras cores da paleta categórica validada (ordem fixa).
+ * "Compareceram" é tracejada e desenhada por último: quando coincide com
+ * "Vendas" (todo mundo comprou), as duas continuam visíveis.
+ */
 const SERIES = [
-  { chave: 'agendamentos', rotulo: 'Agendamentos', cor: 'var(--serie-1)' },
-  { chave: 'compareceram', rotulo: 'Compareceram', cor: 'var(--serie-2)' },
-  { chave: 'vendas', rotulo: 'Vendas fechadas', cor: 'var(--serie-3)' },
+  { chave: 'agendamentos', rotulo: 'Agendamentos', cor: 'var(--serie-1)', tracejada: false },
+  { chave: 'compareceram', rotulo: 'Compareceram', cor: 'var(--serie-2)', tracejada: true },
+  { chave: 'vendas', rotulo: 'Vendas fechadas', cor: 'var(--serie-3)', tracejada: false },
 ] as const
+
+const ORDEM_DESENHO = [SERIES[0], SERIES[2], SERIES[1]]
 
 type Ponto = { periodo: string; agendamentos: number; compareceram: number; vendas: number }
 
@@ -83,7 +89,11 @@ export function GraficoEvolucao({ chaves, serie, agrupar }: Props) {
         <ul className="legenda" aria-label="Legenda">
           {SERIES.map((s) => (
             <li key={s.chave}>
-              <span className="legenda-marca" style={{ background: s.cor }} aria-hidden />
+              <span
+                className={s.tracejada ? 'legenda-marca tracejada' : 'legenda-marca'}
+                style={{ background: s.cor, ['--cor' as string]: s.cor }}
+                aria-hidden
+              />
               {s.rotulo}
             </li>
           ))}
@@ -151,12 +161,13 @@ export function GraficoEvolucao({ chaves, serie, agrupar }: Props) {
               <line x1={x(foco)} x2={x(foco)} y1={MARGEM.topo} y2={MARGEM.topo + alturaPlot} className="mira" />
             )}
 
-            {SERIES.map((s) => (
+            {ORDEM_DESENHO.map((s) => (
               <g key={s.chave}>
                 <polyline
                   fill="none"
                   stroke={s.cor}
                   strokeWidth={2}
+                  strokeDasharray={s.tracejada ? '6 4' : undefined}
                   strokeLinejoin="round"
                   strokeLinecap="round"
                   points={pontos.map((p, i) => `${x(i)},${y(p[s.chave])}`).join(' ')}

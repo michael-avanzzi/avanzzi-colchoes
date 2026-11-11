@@ -25,8 +25,14 @@
 
 .indicadores {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+@media (min-width: 1400px) {
+  .indicadores {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 .indicador {
@@ -174,6 +180,12 @@
   width: 12px;
   height: 4px;
   border-radius: 2px;
+}
+
+/* Série tracejada (desenhada por cima): aparece mesmo quando coincide com outra. */
+.legenda-marca.tracejada {
+  width: 14px;
+  background: repeating-linear-gradient(90deg, var(--cor) 0 5px, transparent 5px 8px) !important;
 }
 
 .grafico-area {

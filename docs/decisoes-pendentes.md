@@ -11,8 +11,9 @@ Regras que foram implementadas com um **padrão provisório** e precisam de vali
 | 5 | Dados da venda | Resultado com valor opcional. A tabela de itens vendidos ainda não foi criada. | `rpc_registrar_resultado` |
 | 6 | Quem marca o comparecimento | Os mesmos usuários que podem alterar o agendamento (regra do item 2). Só a partir do dia do agendamento. | `rpc_atualizar_status` |
 | 7 | Cancelamento, reagendamento, encaixe e duplicidade | Cancelar exige motivo e preserva o registro. Reagendar cria um novo registro vinculado ao anterior. Não há tratamento específico para encaixe nem para duplicidade. | `rpc_cancelar_agendamento`, `rpc_reagendar_agendamento` |
-| 8 | Indicadores | Proposta: o denominador conta só agendamentos passados, sem cancelados, e cada cadeia de reagendamento conta uma vez (pelo registro final). | Etapa 4 |
+| 8 | Indicadores | Ficam de fora os futuros, os cancelados e os reagendados (a cadeia conta uma vez, pelo horário final). Atendimentos que já passaram sem registro de comparecimento ficam como pendentes e não entram nas taxas. Comparecimento = compareceram ÷ (compareceram + faltas). Conversão = vendas ÷ (vendas + não fechou). | `rpc_indicadores` (migração 04) |
 | 9 | Lembrete de 1 hora antes | Só para o vendedor (etapa do WhatsApp) | Etapa 6 |
-| 10 | Ranking por vendedor | Não exibir até que a gestão aprove | Etapa 4 |
+| 10 | Ranking por vendedor | **Ligado** (RANKING_HABILITADO = true): a tabela é ordenada por vendas e mostra a posição | `src/config.ts` |
 | 11 | Consulta ao histórico | Qualquer usuário ativo consulta | policy `eventos_leitura` |
 | 12 | Identidade visual | Ícone e logotipo provisórios (#FAA300, preto e branco) | `public/icons/icon.svg`, `Logo.tsx` |
+| 13 | Falta marcada antes do horário | Permitido no mesmo dia, mas só conta como falta depois que o horário passa | `rpc_atualizar_status`, `rpc_indicadores` |
