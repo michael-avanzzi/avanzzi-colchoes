@@ -9,15 +9,10 @@ type Props = { agendamento: Agendamento; destaque?: boolean }
 
 /** Envia (ou copia) a confirmação do agendamento para o WhatsApp do cliente. */
 export function CompartilharWhatsApp({ agendamento: a, destaque = false }: Props) {
-  const { nomeVendedor, nomeCategoria } = useCadastros()
+  const { nomeVendedor } = useCadastros()
   const [copiado, setCopiado] = useState(false)
 
-  const mensagem = montarMensagem({
-    cliente: a.cliente_nome,
-    inicio: a.inicio,
-    vendedor: nomeVendedor(a.vendedor_id),
-    produto: nomeCategoria(a.categoria_id),
-  })
+  const mensagem = montarMensagem({ inicio: a.inicio, vendedor: nomeVendedor(a.vendedor_id) })
   const temNumero = Boolean(normalizarTelefoneBR(a.cliente_telefone))
 
   function abrir() {

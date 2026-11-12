@@ -19,31 +19,25 @@ const fmtDia = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit
 const fmtHora = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit' })
 
 type Dados = {
-  cliente: string
   inicio: string
   vendedor: string | null
-  produto: string | null
-  observacao?: string | null
 }
 
-/** Mensagem de confirmação do agendamento para o cliente. */
-export function montarMensagem({ cliente, inicio, vendedor, produto }: Dados) {
-  const primeiroNome = cliente.replace(/\(fict[ií]cio\)/i, '').trim().split(/\s+/)[0] ?? ''
-  const nome = primeiroNome ? primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1).toLowerCase() : ''
+/**
+ * Mensagem de confirmação do agendamento para o cliente:
+ *   Seu atendimento está agendado:
+ *   📅 Sexta-feira, 13/11
+ *   <vendedor>
+ *   🕒 08:00
+ *   📍 <endereço da loja>
+ */
+export function montarMensagem({ inicio, vendedor }: Dados) {
   const data = new Date(inicio)
   const dia = fmtDia.format(data)
 
-  const linhas = [
-    `Olá${nome ? `, ${nome}` : ''}! Tudo bem?`,
-    vendedor && vendedor !== '—'
-      ? `Aqui é ${vendedor}, da ${LOJA.nome}.`
-      : `Aqui é da ${LOJA.nome}.`,
-    '',
-    'Seu atendimento está agendado:',
-    `📅 ${dia.charAt(0).toUpperCase()}${dia.slice(1)}`,
-    `🕒 ${fmtHora.format(data)}`,
-  ]
-  if (produto) linhas.push(`🛏️ Interesse: ${produto}`)
+  const linhas = ['Seu atendimento está agendado:', `📅 ${dia.charAt(0).toUpperCase()}${dia.slice(1)}`]
+  if (vendedor && vendedor !== '—') linhas.push(vendedor)
+  linhas.push(`🕒 ${fmtHora.format(data)}`)
   if (LOJA.endereco) linhas.push(`📍 ${LOJA.endereco}`)
   linhas.push('', 'Qualquer dúvida ou se precisar remarcar, é só responder esta mensagem. Até lá!')
 

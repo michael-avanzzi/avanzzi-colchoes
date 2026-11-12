@@ -19,24 +19,24 @@ describe('normalizarTelefoneBR', () => {
 })
 
 describe('montarMensagem', () => {
-  it('traz primeiro nome, vendedor, dia, hora e produto', () => {
-    const m = montarMensagem({
-      cliente: 'MARIANA SOUZA',
-      inicio: new Date(2026, 10, 14, 10, 30).toISOString(),
-      vendedor: 'Michael Avanzzi',
-      produto: 'Colchão',
-    })
-    expect(m).toContain('Olá, Mariana!')
-    expect(m).toContain('Aqui é Michael Avanzzi, da Avanzzi Colchões.')
-    expect(m).toContain('📅 Sábado, 14/11')
-    expect(m).toContain('🕒 10:30')
-    expect(m).toContain('🛏️ Interesse: Colchão')
+  it('segue o padrão: data, vendedor, hora, endereço e despedida', () => {
+    const m = montarMensagem({ inicio: new Date(2026, 10, 13, 8, 0).toISOString(), vendedor: 'Michael Avanzzi' })
+    expect(m).toBe(
+      [
+        'Seu atendimento está agendado:',
+        '📅 Sexta-feira, 13/11',
+        'Michael Avanzzi',
+        '🕒 08:00',
+        '📍 Av. da Saudade, 1177 - Pte. Preta, Campinas - SP, 13041-670',
+        '',
+        'Qualquer dúvida ou se precisar remarcar, é só responder esta mensagem. Até lá!',
+      ].join('\n'),
+    )
   })
 
-  it('omite o produto quando não informado', () => {
-    const m = montarMensagem({ cliente: 'João', inicio: new Date().toISOString(), vendedor: null, produto: null })
-    expect(m).not.toContain('Interesse')
-    expect(m).toContain('Aqui é da Avanzzi Colchões.')
+  it('sem vendedor, pula a linha do nome', () => {
+    const m = montarMensagem({ inicio: new Date(2026, 10, 13, 8, 0).toISOString(), vendedor: null })
+    expect(m.split('\n')[2]).toBe('🕒 08:00')
   })
 })
 
