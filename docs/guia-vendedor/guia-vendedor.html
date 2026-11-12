@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Avanzzi Agendamentos — Guia rápido do vendedor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --marca: #faa300; --marca-escura: #d98c00; --marca-suave: #fff4dc;
+    --preto: #111; --texto: #1a1a1a; --suave: #5e5e5a; --borda: #e4e4e0; --fundo: #f6f6f4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; color: var(--texto); font-size: 10.5pt; line-height: 1.45;
+         -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .pagina { width: 210mm; height: 297mm; padding: 14mm 15mm 12mm; position: relative; page-break-after: always; overflow: hidden; }
+  .pagina:last-child { page-break-after: auto; }
+
+  /* Cabeçalho de página */
+  .topo { display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--marca);
+          padding-bottom: 5mm; margin-bottom: 6mm; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo svg { width: 34px; height: 34px; }
+  .logo b { display: block; font-weight: 800; letter-spacing: .08em; font-size: 13pt; }
+  .logo span { color: var(--marca-escura); font-weight: 700; font-size: 9pt; }
+  .topo .rotulo { font-size: 9pt; color: var(--suave); font-weight: 600; }
+  .rodape { position: absolute; left: 15mm; right: 15mm; bottom: 8mm; display: flex; justify-content: space-between;
+            font-size: 8pt; color: var(--suave); border-top: 1px solid var(--borda); padding-top: 3mm; }
+
+  /* Capa */
+  .capa { background: var(--preto); color: #fff; border-radius: 6mm; padding: 8mm 10mm; display: flex; gap: 10mm;
+          align-items: center; background-image: radial-gradient(circle at 12% 10%, rgba(250,163,0,.28), transparent 50%); }
+  .capa h1 { font-size: 20pt; line-height: 1.12; margin: 0 0 3mm; font-weight: 800; }
+  .capa h1 em { font-style: normal; color: var(--marca); }
+  .capa p { margin: 0; color: rgba(255,255,255,.8); font-size: 10.5pt; }
+  .qr { background: #fff; border-radius: 4mm; padding: 4mm; text-align: center; flex-shrink: 0; }
+  .qr svg { width: 30mm; height: 30mm; display: block; }
+  .qr small { display: block; color: var(--preto); font-weight: 700; font-size: 7.5pt; margin-top: 2mm; }
+  .link { display: inline-block; margin-top: 4mm; background: var(--marca); color: var(--preto); font-weight: 800;
+          padding: 2.2mm 4mm; border-radius: 2.5mm; font-size: 9.5pt; word-break: break-all; }
+
+  .indice { display: grid; grid-template-columns: repeat(6, 1fr); gap: 2mm; margin: 5mm 0 0; }
+  .indice div { border: 1px solid var(--borda); border-radius: 2.5mm; padding: 2mm; font-weight: 600; font-size: 7.6pt; line-height: 1.25; display: flex; align-items: center; }
+  .indice b { display: inline-grid; place-items: center; flex-shrink: 0; width: 5mm; height: 5mm; border-radius: 50%; background: var(--marca);
+              color: var(--preto); margin-right: 1.5mm; font-size: 7.5pt; }
+
+  /* Seções */
+  h2 { display: flex; align-items: center; gap: 3mm; font-size: 14.5pt; margin: 0 0 3.5mm; font-weight: 800; }
+  h2 .n { display: inline-grid; place-items: center; width: 9mm; height: 9mm; border-radius: 50%; background: var(--marca);
+          color: var(--preto); font-size: 12pt; flex-shrink: 0; }
+  h3 { font-size: 10.5pt; margin: 0 0 2mm; }
+  .secao { margin-bottom: 6mm; }
+  .intro { color: var(--suave); margin: -1mm 0 3.5mm; }
+
+  ol.passos { list-style: none; counter-reset: p; margin: 0; padding: 0; }
+  ol.passos > li { counter-increment: p; position: relative; padding: 0 0 2.6mm 9mm; }
+  ol.passos > li::before { content: counter(p); position: absolute; left: 0; top: 0; width: 6mm; height: 6mm; border-radius: 50%;
+                           border: 1.5px solid var(--marca-escura); color: var(--marca-escura); font-weight: 800; font-size: 8.5pt;
+                           display: grid; place-items: center; }
+
+  .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .cartao { border: 1px solid var(--borda); border-radius: 4mm; padding: 3.5mm 4mm 2mm; background: #fff; }
+  .cartao.fundo { background: var(--fundo); border-color: transparent; }
+  .cartao h3 { display: flex; align-items: center; gap: 2mm; }
+  .sistema { font-size: 8pt; font-weight: 800; padding: .6mm 2.4mm; border-radius: 99px; background: var(--preto); color: #fff; }
+
+  /* "Botões" e elementos da tela, desenhados como no app */
+  .bt { display: inline-flex; align-items: center; gap: 1.2mm; padding: .5mm 2.4mm; border-radius: 1.8mm; font-weight: 700;
+        font-size: 9pt; white-space: nowrap; border: 1px solid var(--borda); background: #fff; vertical-align: 1px; }
+  .bt.p { background: var(--marca); border-color: var(--marca); color: var(--preto); }
+  .bt.e { background: var(--preto); border-color: var(--preto); color: #fff; }
+  .ico { display: inline-grid; place-items: center; width: 5.2mm; height: 5.2mm; border-radius: 50%; background: var(--marca);
+         font-weight: 800; font-size: 8.5pt; vertical-align: -1.2mm; }
+  .chip { display: inline-block; padding: .4mm 2.4mm; border-radius: 99px; font-weight: 700; font-size: 8.5pt; white-space: nowrap; }
+
+  .dica { display: flex; gap: 3mm; align-items: flex-start; background: var(--marca-suave); border-left: 3px solid var(--marca);
+          padding: 3mm 4mm; border-radius: 0 3mm 3mm 0; margin-top: 3mm; font-size: 9.5pt; }
+  .dica b:first-child { flex-shrink: 0; }
+  .alerta { background: #fdecea; border-left-color: #c62828; }
+
+  /* Fluxo do Kanban */
+  .fluxo { display: flex; align-items: center; flex-wrap: wrap; gap: 1.6mm; margin: 2mm 0 3mm; }
+  .fluxo .seta { color: var(--suave); font-weight: 800; }
+  .etapas { width: 100%; border-collapse: collapse; font-size: 9.3pt; }
+  .etapas td { padding: 1.9mm 2mm; border-bottom: 1px solid var(--borda); vertical-align: top; }
+  .etapas td:first-child { width: 36mm; }
+
+  /* Mini tela de celular */
+  .celular { width: 52mm; border: 2.5mm solid var(--preto); border-radius: 6mm; overflow: hidden; background: var(--fundo);
+             font-size: 7pt; flex-shrink: 0; }
+  .celular .barra { background: var(--preto); color: #fff; display: flex; justify-content: space-between; align-items: center;
+                    padding: 2mm 3mm; font-weight: 800; letter-spacing: .06em; }
+  .celular .barra i { font-style: normal; color: var(--marca); font-size: 6pt; letter-spacing: 0; display: block; }
+  .celular .barra .av { width: 5mm; height: 5mm; border-radius: 50%; background: var(--marca); color: var(--preto);
+                        display: grid; place-items: center; letter-spacing: 0; }
+  .celular .corpo { padding: 2.5mm; }
+  .celular .tit { font-weight: 800; font-size: 9pt; }
+  .celular .novo { background: var(--marca); border-radius: 1.5mm; padding: 1mm 2mm; font-weight: 800; display: inline-block; margin: 1.5mm 0; }
+  .col { background: #ecece8; border-radius: 2mm; padding: 1.8mm; margin-top: 1.5mm; }
+  .col .h { font-weight: 800; display: flex; align-items: center; gap: 1.2mm; margin-bottom: 1.2mm; }
+  .col .h::before { content: ''; width: 2mm; height: 2mm; border-radius: 50%; background: var(--c); }
+  .card { background: #fff; border-radius: 1.5mm; border-left: 1mm solid var(--c); padding: 1.3mm 1.8mm; margin-top: 1.2mm; }
+  .card b { display: block; font-size: 7.5pt; }
+  .card span { color: var(--suave); }
+  .menu { display: flex; justify-content: space-around; background: #fff; border-top: 1px solid var(--borda); padding: 1.6mm 0;
+          font-weight: 700; color: var(--suave); font-size: 6pt; }
+  .menu .ativo { color: var(--preto); background: var(--marca-suave); border-radius: 1.5mm; padding: 0 1.5mm; }
+
+  .com-celular { display: flex; gap: 7mm; align-items: flex-start; }
+  .com-celular > div:first-child { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ============================== PÁGINA 1 ============================== -->
+<section class="pagina">
+  <div class="topo">
+    <div class="logo">
+      <svg viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#111"/><path d="M256 104 L392 408 H330 L302 342 H210 L182 408 H120 Z M228 296 H284 L256 228 Z" fill="#FAA300"/></svg>
+      <div><b>AVANZZI</b><span>Agendamentos</span></div>
+    </div>
+    <div class="rotulo">Guia rápido do vendedor</div>
+  </div>
+
+  <div class="capa">
+    <div>
+      <h1>Seus agendamentos<br>na palma da mão, <em>em 5 minutos.</em></h1>
+      <p>Entre no app, instale no celular e acompanhe cada cliente do agendamento até a venda.</p>
+      <div class="link">avanzzi-colchoes.avanzzimichael.workers.dev</div>
+    </div>
+    <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h33v33H0z"/><path stroke="#111111" d="M0 0.5h7m2 0h4m1 0h1m1 0h1m1 0h6m2 0h7M0 1.5h1m5 0h1m2 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1m4 0h4m1 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m1 0h2m8 0h2m2 0h3m1 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h4m1 0h5m2 0h1m1 0h2m2 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m1 0h1m2 0h3m3 0h1m1 0h1m6 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M8 7.5h1m1 0h1m5 0h1m2 0h3m1 0h2M0 8.5h1m1 0h5m3 0h2m1 0h2m2 0h1m1 0h1m2 0h2m2 0h5M1 9.5h2m7 0h1m1 0h3m1 0h6m1 0h1m2 0h2m1 0h2m1 0h1M0 10.5h2m4 0h1m5 0h6m2 0h1m3 0h3m1 0h1m1 0h2M0 11.5h1m2 0h1m8 0h2m1 0h1m1 0h3m1 0h1m1 0h1m4 0h4M4 12.5h4m1 0h2m3 0h3m5 0h3m2 0h3m1 0h2M2 13.5h2m1 0h1m3 0h1m1 0h1m3 0h1m2 0h1m3 0h2m2 0h1m4 0h2M0 14.5h3m1 0h1m1 0h4m2 0h1m1 0h3m4 0h1m2 0h3m2 0h3M2 15.5h2m1 0h1m1 0h1m1 0h4m2 0h1m3 0h8m2 0h2M3 16.5h4m1 0h1m5 0h2m1 0h1m6 0h2m1 0h2m3 0h1M0 17.5h3m1 0h1m4 0h1m2 0h3m1 0h1m2 0h3m1 0h1m2 0h2m1 0h2m1 0h1M1 18.5h3m2 0h1m2 0h1m1 0h3m1 0h1m2 0h1m6 0h4m1 0h2M2 19.5h1m2 0h1m4 0h2m2 0h1m1 0h1m3 0h3m1 0h1m1 0h6M6 20.5h1m8 0h1m2 0h3m4 0h1m1 0h3m2 0h1M0 21.5h1m1 0h4m1 0h1m1 0h2m3 0h3m2 0h2m2 0h1m1 0h2m3 0h1m1 0h1M0 22.5h1m1 0h3m1 0h2m1 0h1m3 0h2m2 0h2m1 0h3m6 0h1m1 0h1M0 23.5h1m1 0h3m2 0h1m1 0h1m1 0h1m4 0h1m3 0h4m1 0h1m1 0h1m1 0h4M0 24.5h1m3 0h7m1 0h2m2 0h3m3 0h7M8 25.5h3m5 0h5m3 0h1m3 0h1m1 0h1m1 0h1M0 26.5h7m3 0h2m1 0h5m2 0h1m1 0h3m1 0h1m1 0h1m1 0h2M0 27.5h1m5 0h1m1 0h4m2 0h2m1 0h5m1 0h2m3 0h3m1 0h1M0 28.5h1m1 0h3m1 0h1m1 0h1m2 0h6m2 0h1m2 0h1m1 0h6m2 0h1M0 29.5h1m1 0h3m1 0h1m1 0h2m1 0h2m2 0h1m1 0h5m3 0h1m2 0h1m2 0h2M0 30.5h1m1 0h3m1 0h1m1 0h1m1 0h2m3 0h3m5 0h5m2 0h1M0 31.5h1m5 0h1m2 0h1m3 0h1m1 0h1m2 0h1m1 0h3m2 0h1m2 0h3M0 32.5h7m1 0h3m1 0h4m1 0h1m4 0h6m3 0h1"/></svg>
+<small>Aponte a câmera</small></div>
+  </div>
+
+  <div class="indice">
+    <div><b>1</b>Primeiro acesso</div>
+    <div><b>2</b>Instalar no celular</div>
+    <div><b>3</b>Lembretes e foto</div>
+    <div><b>4</b>Novo agendamento</div>
+    <div><b>5</b>Acompanhar no Kanban</div>
+    <div><b>6</b>Reagendar e cancelar</div>
+  </div>
+
+  <div class="secao" style="margin-top:5mm">
+    <h2><span class="n">1</span>Primeiro acesso</h2>
+    <p class="intro">O administrador cria seu usuário e entrega uma <b>senha temporária</b>.</p>
+    <ol class="passos">
+      <li>Abra o endereço acima (ou aponte a câmera para o QR Code).</li>
+      <li>Digite seu <b>e-mail</b> e a <b>senha temporária</b> e toque em <span class="bt p">Entrar</span>.</li>
+      <li>O app pede para <b>criar a sua senha</b> (mínimo de 8 caracteres). Digite duas vezes e toque em <span class="bt p">Salvar nova senha</span>.</li>
+      <li>Pronto: você cai no <b>Kanban</b>, a tela principal.</li>
+    </ol>
+    <div class="dica"><b>🔑</b><span><b>Esqueceu a senha?</b> Peça ao administrador uma nova senha temporária. A senha é pessoal: não compartilhe, porque tudo o que você faz fica registrado no seu nome.</span></div>
+  </div>
+
+  <div class="secao">
+    <h2><span class="n">2</span>Instalar na tela de início</h2>
+    <p class="intro">Instalado, ele abre como um aplicativo, em tela cheia, e recebe os lembretes.</p>
+    <div class="duas">
+      <div class="cartao">
+        <h3><span class="sistema">ANDROID</span> no Chrome</h3>
+        <ol class="passos">
+          <li>Abra o app no <b>Chrome</b> e faça login.</li>
+          <li>Toque no menu <b>⋮</b> (canto superior direito).</li>
+          <li>Toque em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b> e confirme.</li>
+        </ol>
+      </div>
+      <div class="cartao">
+        <h3><span class="sistema">IPHONE</span> no Safari</h3>
+        <ol class="passos">
+          <li>Abra o app no <b>Safari</b> (precisa ser o Safari).</li>
+          <li>Toque em <b>Compartilhar</b> (quadrado com seta ↑).</li>
+          <li>Toque em <b>Adicionar à Tela de Início</b> → <b>Adicionar</b>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="rodape"><span>Avanzzi Colchões · Agendamentos</span><span>1 / 3</span></div>
+</section>
+
+<!-- ============================== PÁGINA 2 ============================== -->
+<section class="pagina">
+  <div class="topo">
+    <div class="logo">
+      <svg viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#111"/><path d="M256 104 L392 408 H330 L302 342 H210 L182 408 H120 Z M228 296 H284 L256 228 Z" fill="#FAA300"/></svg>
+      <div><b>AVANZZI</b><span>Agendamentos</span></div>
+    </div>
+    <div class="rotulo">Guia rápido do vendedor</div>
+  </div>
+
+  <div class="secao">
+    <h2><span class="n">3</span>Ative os lembretes e coloque sua foto</h2>
+    <p class="intro">O app avisa <b>1 hora antes</b> de cada atendimento seu que ainda não foi confirmado com o cliente, mesmo com o app fechado.</p>
+    <div class="dica" style="margin:0 0 3.5mm"><b>📱</b><span>Depois de instalar, <b>abra sempre pelo ícone</b> <b>Agendamentos</b> na tela do celular. No iPhone, os lembretes só funcionam abrindo por esse ícone.</span></div>
+    <ol class="passos">
+      <li>Toque na sua <b>inicial</b> <span class="ico">M</span> no canto superior direito para abrir <b>Meu perfil</b>.</li>
+      <li>Toque em <span class="bt p">🔔 Ativar notificações</span> e depois em <b>Permitir</b>.</li>
+      <li>Aproveite e toque em <span class="bt">📷 Adicionar foto</span> para colocar sua foto de perfil.</li>
+    </ol>
+    <div class="dica"><b>🔔</b><span>Quando chegar <b>“Confirme o atendimento”</b>, ligue ou mande mensagem para o cliente e depois toque em <span class="bt p">✓ Confirmado</span>, no aviso ou no sino 🔔 do app. O número no sino mostra quantos ainda faltam confirmar.</span></div>
+  </div>
+
+  <div class="secao com-celular">
+    <div>
+      <h2><span class="n">4</span>Criar um agendamento</h2>
+      <ol class="passos">
+        <li>No <b>Kanban</b>, toque em <span class="bt p">+ Novo agendamento</span>.</li>
+        <li>Preencha o <b>nome do cliente</b> e, de preferência, o <b>telefone</b>.</li>
+        <li>Escolha a <b>data</b>, o <b>horário</b> e a <b>duração</b> do atendimento.</li>
+        <li>Marque o <b>produto de interesse</b> (colchão, cama, box…) e escreva <b>observações</b> úteis, como medidas ou preferências.</li>
+        <li>Toque em <span class="bt p">Agendar</span>. O cartão aparece na coluna <span class="chip" style="background:#eef1f5">Agendado</span>.</li>
+      </ol>
+      <div class="dica"><b>👤</b><span>O <b>vendedor responsável é você</b>, preenchido automaticamente pelo seu login. Se você já tiver outro cliente no mesmo horário, o app avisa o <b>conflito</b> e não deixa duplicar.</span></div>
+      <div class="dica"><b>📅</b><span>No <b>Calendário</b> (menu de baixo) você vê o dia, a semana ou o mês. Tocar num horário vazio também abre um agendamento novo já com a data e a hora.</span></div>
+    </div>
+    <div class="celular" aria-hidden="true">
+      <div class="barra"><div>AVANZZI<i>Agendamentos</i></div><div class="av">M</div></div>
+      <div class="corpo">
+        <div class="tit">Kanban</div>
+        <div class="novo">+ Novo agendamento</div>
+        <div class="col" style="--c:#6b7a90"><div class="h">Agendado</div>
+          <div class="card"><span>09:00 · Colchão</span><b>Cliente exemplo</b><span>Seu nome</span></div>
+          <div class="card"><span>10:30 · Box</span><b>Cliente exemplo</b><span>Seu nome</span></div>
+        </div>
+        <div class="col" style="--c:#2f6fd6"><div class="h">Confirmado</div>
+          <div class="card"><span>14:00 · Cama</span><b>Cliente exemplo</b><span>Seu nome</span></div>
+        </div>
+      </div>
+      <div class="menu"><span class="ativo">Kanban</span><span>Calendário</span></div>
+    </div>
+  </div>
+
+  <div class="rodape"><span>Avanzzi Colchões · Agendamentos</span><span>2 / 3</span></div>
+</section>
+
+<!-- ============================== PÁGINA 3 ============================== -->
+<section class="pagina">
+  <div class="topo">
+    <div class="logo">
+      <svg viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#111"/><path d="M256 104 L392 408 H330 L302 342 H210 L182 408 H120 Z M228 296 H284 L256 228 Z" fill="#FAA300"/></svg>
+      <div><b>AVANZZI</b><span>Agendamentos</span></div>
+    </div>
+    <div class="rotulo">Guia rápido do vendedor</div>
+  </div>
+
+  <div class="secao">
+    <h2><span class="n">5</span>Acompanhar no Kanban</h2>
+    <p class="intro">Cada cartão é um atendimento. Mova o cartão conforme o atendimento avança: é isso que gera os números da loja.</p>
+
+    <div class="fluxo">
+      <span class="chip" style="background:#eef1f5;color:#3b4656">Agendado</span><span class="seta">→</span>
+      <span class="chip" style="background:#e3edfb;color:#1f4f9c">Confirmado</span><span class="seta">→</span>
+      <span class="chip" style="background:#fdf0d9;color:#8a5a00">Em atendimento</span><span class="seta">→</span>
+      <span class="chip" style="background:#e1f3e8;color:#16683a">Venda fechada</span>
+      <span class="seta">ou</span>
+      <span class="chip" style="background:#f2e9e4;color:#6b4434">Não fechou</span>
+    </div>
+
+    <table class="etapas">
+      <tr><td><span class="chip" style="background:#e3edfb;color:#1f4f9c">Confirmado</span></td><td>Você falou com o cliente e ele confirmou que vem.</td></tr>
+      <tr><td><span class="chip" style="background:#fdf0d9;color:#8a5a00">Em atendimento</span></td><td>O cliente <b>chegou na loja</b>.</td></tr>
+      <tr><td><span class="chip" style="background:#e1f3e8;color:#16683a">Venda fechada</span></td><td>Comprou. O app pede o <b>valor da venda</b>, que é opcional mas ajuda nos relatórios.</td></tr>
+      <tr><td><span class="chip" style="background:#f2e9e4;color:#6b4434">Não fechou</span></td><td>Foi atendido, mas não comprou.</td></tr>
+      <tr><td><span class="chip" style="background:#fbe4e4;color:#a02020">Não compareceu</span></td><td>O cliente não veio. Use <b>Reagendar</b> se ele quiser outro horário.</td></tr>
+    </table>
+
+    <h3 style="margin-top:4mm">Como mover um cartão</h3>
+    <div class="duas">
+      <div class="cartao fundo"><b>Arrastando:</b> no celular, <b>segure o cartão</b> por um instante e arraste para a coluna. No computador, clique e arraste.</div>
+      <div class="cartao fundo"><b>Pelo cartão:</b> toque no cartão e escolha a etapa em <b>Mover para</b>. Na aba <b>Histórico</b> você vê tudo o que já aconteceu com ele.</div>
+    </div>
+    <div class="dica"><b>🗓️</b><span>No topo, use <span class="bt">Dia</span> <span class="bt">Semana</span> e <span class="bt">Hoje</span> para navegar. <b>Comparecimento e venda só podem ser marcados no dia do atendimento.</b></span></div>
+    <div class="dica alerta"><b>⚠️</b><span>Atualize o cartão <b>no mesmo dia</b>. Se aparecer o aviso amarelo de <b>pendências</b>, toque em <b>Resolver</b> e informe se o cliente veio e se comprou: sem isso, seus números ficam incompletos.</span></div>
+  </div>
+
+  <div class="secao">
+    <h2><span class="n">6</span>Reagendar ou cancelar</h2>
+    <div class="duas">
+      <div class="cartao">
+        <h3>🔁 Reagendar</h3>
+        Toque no cartão → <span class="bt">Reagendar</span> → escolha a nova data e o horário (motivo opcional) → <span class="bt p">Confirmar</span>. O horário antigo fica registrado como <b>Reagendado</b> e um cartão novo é criado.
+      </div>
+      <div class="cartao">
+        <h3>✖️ Cancelar</h3>
+        Toque no cartão → <span class="bt">Cancelar</span> → escreva o <b>motivo</b> (obrigatório) → <span class="bt e">Confirmar</span>. O registro não é apagado: fica no histórico.
+      </div>
+    </div>
+    <div class="dica"><b>💡</b><span>Use <span class="bt">Editar</span> para corrigir nome, telefone, produto ou observações. Para mudar <b>data ou horário</b>, use sempre <b>Reagendar</b>.</span></div>
+  </div>
+
+  <div class="rodape"><span>Dúvidas ou problemas de acesso: fale com o administrador do sistema.</span><span>3 / 3</span></div>
+</section>
+
+</body>
+</html>
