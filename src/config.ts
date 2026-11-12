@@ -9,5 +9,5 @@ export const RANKING_HABILITADO = true
 export const LOJA = {
   nome: 'Avanzzi Colchões',
   /** Preencha para incluir o endereço na mensagem (ex.: 'Av. Brasil, 1000 - Centro'). Vazio = não envia. */
-  endereco: '',
+  endereco: 'Av. da Saudade, 1177 - Pte. Preta, Campinas - SP, 13041-670',
 }
