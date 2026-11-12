@@ -39,6 +39,7 @@ import {
   type Coluna,
 } from '../../types/agendamento'
 import { AgendamentoForm } from './AgendamentoForm'
+import { CompartilharWhatsApp } from './CompartilharWhatsApp'
 import { Historico } from './Historico'
 
 export type AcaoDetalhe = 'editar' | 'reagendar' | 'cancelar' | 'transferir' | 'venda'
@@ -49,9 +50,11 @@ type Props = {
   onAlterado: (a: Agendamento) => void
   /** Abre outro agendamento (ex.: anterior/novo de um reagendamento). */
   onAbrir?: (id: string) => void
+  /** Acabou de ser criado: destaca o envio da confirmação ao cliente. */
+  recemCriado?: boolean
 }
 
-export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlterado, onAbrir }: Props) {
+export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlterado, onAbrir, recemCriado = false }: Props) {
   const { perfil } = useAuth()
   const { nomeVendedor, nomeCategoria, vendedores } = useCadastros()
 
@@ -241,6 +244,10 @@ export function AgendamentoDetalhe({ agendamento: a, acaoInicial = null, onAlter
                 </button>
               )}
             </p>
+          )}
+
+          {!acao && (a.status === 'agendado' || a.status === 'confirmado') && (
+            <CompartilharWhatsApp agendamento={a} destaque={recemCriado} />
           )}
 
           {editavel && !acao && (

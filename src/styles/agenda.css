@@ -551,3 +551,37 @@
     font-size: 1rem;
   }
 }
+
+/* ---------- Envio ao cliente pelo WhatsApp ---------- */
+
+.botao-whatsapp {
+  background: #1f8f4e;
+  border-color: #1f8f4e;
+  color: #fff;
+}
+
+.botao-whatsapp:hover {
+  background: #187a41;
+}
+
+.whatsapp-destaque {
+  border: 1px solid #1f8f4e;
+  background: #ecf7f0;
+}
+
+.previa-mensagem summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+.previa-mensagem pre {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--superficie);
+  font-family: inherit;
+  font-size: 0.88rem;
+  white-space: pre-wrap;
+}

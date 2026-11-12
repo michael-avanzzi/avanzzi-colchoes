@@ -25,6 +25,8 @@ export function AgendamentoModais({ estado, onEstado, agendamentos, onMudou }: P
   // (pendências antigas, cadeia de reagendamento).
   const [ultimo, setUltimo] = useState<Agendamento | null>(null)
   const [erro, setErro] = useState<string | null>(null)
+  // Agendamento recém-criado: o detalhe abre com o envio ao cliente em destaque.
+  const [recemCriado, setRecemCriado] = useState<string | null>(null)
 
   const idDetalhe = estado?.tipo === 'detalhe' ? estado.id : null
   const daLista = idDetalhe ? agendamentos.find((a) => a.id === idDetalhe) : undefined
@@ -48,6 +50,7 @@ export function AgendamentoModais({ estado, onEstado, agendamentos, onMudou }: P
 
   function abrir(id: string) {
     setErro(null)
+    setRecemCriado(null)
     onEstado({ tipo: 'detalhe', id })
   }
 
@@ -73,7 +76,9 @@ export function AgendamentoModais({ estado, onEstado, agendamentos, onMudou }: P
             onSalvo={(a) => {
               setUltimo(a)
               onMudou()
-              onEstado(null)
+              setErro(null)
+              setRecemCriado(a.id)
+              onEstado({ tipo: 'detalhe', id: a.id })
             }}
           />
         )}
@@ -88,6 +93,7 @@ export function AgendamentoModais({ estado, onEstado, agendamentos, onMudou }: P
               acaoInicial={estado.acao}
               onAlterado={aoAlterar}
               onAbrir={abrir}
+              recemCriado={recemCriado === detalhe.id}
             />
           ) : erro ? (
             <p className="alerta alerta-erro" role="alert">{erro}</p>
