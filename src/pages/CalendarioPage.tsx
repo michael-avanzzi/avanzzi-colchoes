@@ -5,10 +5,12 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import ptBrLocale from '@fullcalendar/core/locales/pt-br'
 import type { DatesSetArg, EventInput } from '@fullcalendar/core'
-import { Plus } from 'lucide-react'
+import { ImageDown, Plus } from 'lucide-react'
 
 import { AgendamentoModais, type EstadoModal } from '../components/agendamentos/AgendamentoModais'
 import { FiltroVendedor } from '../components/agendamentos/FiltroVendedor'
+import { ImagemHorarios } from '../components/agendamentos/ImagemHorarios'
+import { useAuth } from '../auth/AuthProvider'
 import { useAgendamentos } from '../hooks/useAgendamentos'
 import { useCadastros } from '../hooks/useCadastros'
 import { COLUNAS, COLUNA_POR_ID, colunaDe, type Coluna } from '../types/agendamento'
@@ -20,7 +22,9 @@ const ehCelular = () => window.matchMedia('(max-width: 860px)').matches
 
 export function CalendarioPage() {
   const { nomeVendedor } = useCadastros()
-  const [periodo, setPeriodo] = useState<{ inicio: Date; fim: Date } | null>(null)
+  const { perfil } = useAuth()
+  const [periodo, setPeriodo] = useState<{ inicio: Date; fim: Date; visao: string } | null>(null)
+  const [imagemAberta, setImagemAberta] = useState(false)
   const [vendedor, setVendedor] = useState('')
   const [filtroColuna, setFiltroColuna] = useState<FiltroColuna>('')
   const [modal, setModal] = useState<EstadoModal>(null)
@@ -58,11 +62,18 @@ export function CalendarioPage() {
 
   function aoMudarDatas(arg: DatesSetArg) {
     setPeriodo((p) =>
-      p && p.inicio.getTime() === arg.start.getTime() && p.fim.getTime() === arg.end.getTime()
+      p &&
+      p.inicio.getTime() === arg.start.getTime() &&
+      p.fim.getTime() === arg.end.getTime() &&
+      p.visao === arg.view.type
         ? p
-        : { inicio: arg.start, fim: arg.end },
+        : { inicio: arg.start, fim: arg.end, visao: arg.view.type },
     )
   }
+
+  // Imagem dos horários: só na visão Dia. Sem filtro, usa a agenda de quem está logado.
+  const vendedorDaImagem = vendedor || (perfil?.allowed ? perfil.id : '')
+  const podeGerarImagem = periodo?.visao === 'timeGridDay' && Boolean(vendedorDaImagem)
 
   return (
     <section className="pagina pagina-larga">
@@ -88,6 +99,16 @@ export function CalendarioPage() {
             ))}
           </select>
         </label>
+        {podeGerarImagem && (
+          <button
+            type="button"
+            className="botao botao-secundario botao-pequeno"
+            onClick={() => setImagemAberta(true)}
+            disabled={carregando}
+          >
+            <ImageDown size={16} aria-hidden /> Imagem dos horários
+          </button>
+        )}
         {carregando && periodo && <span className="spinner spinner-suave" role="status" aria-label="Carregando" />}
       </div>
 
@@ -125,6 +146,17 @@ export function CalendarioPage() {
           }}
         />
       </div>
+
+      {periodo && vendedorDaImagem && (
+        <ImagemHorarios
+          aberto={imagemAberta && podeGerarImagem}
+          onFechar={() => setImagemAberta(false)}
+          dia={periodo.inicio}
+          vendedorId={vendedorDaImagem}
+          vendedorNome={nomeVendedor(vendedorDaImagem)}
+          agendamentos={agendamentos}
+        />
+      )}
 
       <AgendamentoModais estado={modal} onEstado={setModal} agendamentos={agendamentos} onMudou={() => void recarregar()} />
     </section>
