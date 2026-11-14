@@ -13,7 +13,7 @@ Regras que foram implementadas com um **padrão provisório** e precisam de vali
 | 7 | Cancelamento, reagendamento, encaixe e duplicidade | Cancelar exige motivo e preserva o registro. Reagendar cria um novo registro vinculado ao anterior. Não há tratamento específico para encaixe nem para duplicidade. | `rpc_cancelar_agendamento`, `rpc_reagendar_agendamento` |
 | 8 | Indicadores | Ficam de fora os futuros, os cancelados e os reagendados (a cadeia conta uma vez, pelo horário final). Atendimentos que já passaram sem registro de comparecimento ficam como pendentes e não entram nas taxas. Comparecimento = compareceram ÷ (compareceram + faltas). Conversão = vendas ÷ (vendas + não fechou). | `rpc_indicadores` (migração 04) |
 | 9 | Lembrete de 1 hora antes | Só para o vendedor (etapa do WhatsApp) | Etapa 6 |
-| 10 | Ranking por vendedor | **Ligado** (RANKING_HABILITADO = true): a tabela é ordenada por vendas e mostra a posição | `src/config.ts` |
+| 10 | Ranking por vendedor | **Ligado** (RANKING_HABILITADO = true). Ordem: maior **valor vendido** no período (dia, semana, mês ou personalizado). Desempate: vendas, conversão, clientes atendidos. A tabela mostra também o ticket médio. Cancelados e futuros ficam de fora. | `src/config.ts`, `src/lib/ranking.ts` |
 | 11 | Consulta ao histórico | Qualquer usuário ativo consulta | policy `eventos_leitura` |
 | 12 | Identidade visual | Ícone e logotipo provisórios (#FAA300, preto e branco) | `public/icons/icon.svg`, `Logo.tsx` |
 | 13 | Falta marcada antes do horário | Permitido no mesmo dia, mas só conta como falta depois que o horário passa | `rpc_atualizar_status`, `rpc_indicadores` |

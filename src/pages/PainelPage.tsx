@@ -15,8 +15,9 @@ import {
   somarDias,
 } from '../lib/datas'
 import { agrupamentoPara, chavesDoPeriodo } from '../lib/periodos'
+import { ordenarRanking, ticketMedio } from '../lib/ranking'
 import { mensagemDeErro } from '../lib/supabase'
-import { obterIndicadores, type Indicadores, type Metricas } from '../services/indicadores.service'
+import { obterIndicadores, type Indicadores, type Metricas, type MetricasVendedor } from '../services/indicadores.service'
 
 type TipoPeriodo = 'dia' | 'semana' | 'mes' | 'personalizado'
 
@@ -100,9 +101,8 @@ export function PainelPage() {
 
   const r = dados?.resumo
   const vendedores = useMemo(() => {
-    const lista = [...(dados?.por_vendedor ?? [])]
-    if (!RANKING_HABILITADO) lista.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
-    return lista
+    const lista = dados?.por_vendedor ?? []
+    return RANKING_HABILITADO ? ordenarRanking(lista) : [...lista].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))
   }, [dados])
 
   return (
@@ -232,7 +232,8 @@ export function PainelPage() {
                       <th scope="col" className="num">Vendas</th>
                       <th scope="col" className="num">Comparecimento</th>
                       <th scope="col" className="num">Conversão</th>
-                      <th scope="col" className="num">Valor</th>
+                      <th scope="col" className="num">Ticket médio</th>
+                      <th scope="col" className="num">Valor vendido</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -252,7 +253,10 @@ export function PainelPage() {
                           {taxa(v.taxa_conversao)}
                           <small> {v.vendas}/{v.vendas + v.nao_fechou}</small>
                         </td>
-                        <td className="num">{v.valor_vendido > 0 ? formatarMoeda(v.valor_vendido) : '—'}</td>
+                        <td className="num">{formatarTicket(v)}</td>
+                        <td className="num">
+                          <strong>{v.valor_vendido > 0 ? formatarMoeda(v.valor_vendido) : '—'}</strong>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -268,6 +272,13 @@ export function PainelPage() {
             <ul>
               <li><strong>Taxa de comparecimento</strong> = compareceram ÷ (compareceram + não compareceram).</li>
               <li><strong>Taxa de conversão</strong> = vendas fechadas ÷ (vendas fechadas + não fechou).</li>
+              {RANKING_HABILITADO && (
+                <li>
+                  <strong>Ranking</strong> = maior valor vendido no período. O valor já reúne os clientes trazidos à loja,
+                  a conversão e o ticket médio. Empate: mais vendas, maior conversão, mais clientes atendidos.
+                </li>
+              )}
+              <li><strong>Ticket médio</strong> = valor vendido ÷ vendas fechadas.</li>
               <li>Ficam de fora: agendamentos futuros, cancelados e reagendados (a cadeia conta uma vez, pelo horário final).</li>
               <li>Atendimentos que já passaram sem registro de comparecimento, ou com resultado pendente, aguardam conclusão e não entram nas taxas.</li>
               <li>Regra provisória, sujeita à validação da gestão.</li>
@@ -277,6 +288,11 @@ export function PainelPage() {
       )}
     </section>
   )
+}
+
+function formatarTicket(v: MetricasVendedor) {
+  const t = ticketMedio(v)
+  return t === null ? '—' : formatarMoeda(t)
 }
 
 function detalheAgendamentos(r: Metricas) {

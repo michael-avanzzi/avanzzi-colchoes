@@ -1,7 +1,6 @@
 /**
- * Ranking de vendedores no Painel. Desligado até a gestão aprovar
- * (docs/decisoes-pendentes.md). Com true, a tabela por vendedor passa a ser
- * ordenada por vendas e exibe a posição de cada um.
+ * Ranking de vendedores no Painel (ordem por valor vendido: src/lib/ranking.ts).
+ * Com false, a tabela por vendedor fica em ordem alfabética, sem posição.
  */
 export const RANKING_HABILITADO = true
 
