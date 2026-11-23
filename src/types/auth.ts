@@ -1,9 +1,11 @@
-export type Papel = 'vendedor' | 'gerente' | 'admin'
+/** "tv": conta da TV da sala de vendas, só enxerga o Ranking em modo TV. */
+export type Papel = 'vendedor' | 'gerente' | 'admin' | 'tv'
 
 export const PAPEL_ROTULO: Record<Papel, string> = {
   vendedor: 'Vendedor',
   gerente: 'Gerente',
   admin: 'Administrador',
+  tv: 'TV (só ranking)',
 }
 
 /** Retorno de rpc_meu_perfil. */

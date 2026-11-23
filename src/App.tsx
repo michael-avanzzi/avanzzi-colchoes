@@ -7,6 +7,8 @@ import { CalendarioPage } from './pages/CalendarioPage'
 import { KanbanPage } from './pages/KanbanPage'
 import { LoginPage } from './pages/LoginPage'
 import { PainelPage } from './pages/PainelPage'
+import { RankingPage } from './pages/RankingPage'
+import { RankingTvPage } from './pages/RankingTvPage'
 import { UsuariosPage } from './pages/UsuariosPage'
 
 export default function App() {
@@ -15,6 +17,16 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+
+          {/* Tela cheia para a TV da sala de vendas (fora do menu). */}
+          <Route
+            path="/ranking/tv"
+            element={
+              <ProtectedRoute>
+                <RankingTvPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             element={
@@ -25,6 +37,14 @@ export default function App() {
           >
             <Route index element={<KanbanPage />} />
             <Route path="calendario" element={<CalendarioPage />} />
+            <Route
+              path="ranking"
+              element={
+                <ProtectedRoute papeis={['vendedor', 'gerente', 'admin']}>
+                  <RankingPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="painel"
               element={

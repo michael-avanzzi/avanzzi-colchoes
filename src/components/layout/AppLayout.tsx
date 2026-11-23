@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import {
   CalendarDays,
   KanbanSquare,
   LayoutDashboard,
+  Trophy,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -25,6 +26,7 @@ type ItemMenu = {
 const MENU: ItemMenu[] = [
   { to: '/', rotulo: 'Kanban', icone: KanbanSquare },
   { to: '/calendario', rotulo: 'Calendário', icone: CalendarDays },
+  { to: '/ranking', rotulo: 'Ranking', icone: Trophy, papeis: ['vendedor', 'gerente', 'admin'] },
   { to: '/painel', rotulo: 'Painel', icone: LayoutDashboard, papeis: ['gerente', 'admin'] },
   { to: '/usuarios', rotulo: 'Usuários', icone: Users, papeis: ['admin'] },
 ]
@@ -33,6 +35,8 @@ export function AppLayout() {
   const { perfil } = useAuth()
   const [perfilAberto, setPerfilAberto] = useState(false)
   if (!perfil?.allowed) return null
+  // A conta da TV só enxerga o ranking em tela cheia.
+  if (perfil.papel === 'tv') return <Navigate to="/ranking/tv" replace />
 
   const itens = MENU.filter((item) => !item.papeis || item.papeis.includes(perfil.papel))
 

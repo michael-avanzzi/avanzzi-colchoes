@@ -9,6 +9,7 @@ import './styles/index.css'
 import './styles/agenda.css'
 import './styles/painel.css'
 import './styles/perfil.css'
+import './styles/ranking.css'
 
 instalarCapturaGlobal()
 

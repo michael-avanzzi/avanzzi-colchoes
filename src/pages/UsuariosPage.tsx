@@ -17,7 +17,7 @@ import {
 } from '../services/usuarios.service'
 import { PAPEL_ROTULO, type Papel } from '../types/auth'
 
-const PAPEIS: Papel[] = ['vendedor', 'gerente', 'admin']
+const PAPEIS: Papel[] = ['vendedor', 'gerente', 'admin', 'tv']
 
 type Formulario = {
   id?: string

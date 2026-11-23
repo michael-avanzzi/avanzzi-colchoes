@@ -18,7 +18,7 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const PAPEIS = ["vendedor", "gerente", "admin"];
+const PAPEIS = ["vendedor", "gerente", "admin", "tv"];
 
 function responder(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

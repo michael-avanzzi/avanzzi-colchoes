@@ -32,6 +32,8 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261111_04_indicadores.sql` | `rpc_indicadores`: toda a regra de cálculo do Painel |
 | `20261111_05_registro_erros.sql` | Registro de erros do app (`erros_app`) e remoção do acesso de visitantes às funções |
 | `20261111_06_fotos_e_lembretes.sql` | Fotos de perfil (bucket `avatares`) e lembretes por notificação (`push_inscricoes`, `lembretes_enviados`) |
+| `20261123_07_papel_tv.sql` | Papel `tv` (conta da TV da sala de vendas, só vê o Ranking) |
+| `20261123_08_vendas_syscol.sql` | Vendas do Syscol (schema `syscol`), `rpc_ranking_vendas`, metas e avisos do Ranking |
 
 ## Testes
 
@@ -76,3 +78,4 @@ Use apenas dados fictícios em desenvolvimento e marque o nome do cliente com `(
 - [docs/implantacao.md](docs/implantacao.md): publicação no Cloudflare, checklist do Supabase, backup e recuperação
 - [docs/homologacao.md](docs/homologacao.md): roteiro de testes com a equipe antes do uso real
 - [docs/notificacoes.md](docs/notificacoes.md): lembretes de 1 hora antes por notificação (configuração e conferência)
+- [docs/ranking-syscol.md](docs/ranking-syscol.md): Ranking de vendas com os pedidos do Syscol (webhook, API, TV e avisos)
