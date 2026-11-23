@@ -20,6 +20,7 @@ import {
   type AvisoRanking,
   type PresetPeriodo,
 } from '../lib/rankingVendas'
+import type { PedidoRanking } from '../services/ranking.service'
 
 const pct1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 const hora = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
@@ -253,9 +254,7 @@ export function RankingPage() {
                           <td>{dataCurta(p.data_emissao)}</td>
                           <td>{p.vendedor_2 ? `${p.vendedor} e ${p.vendedor_2}` : (p.vendedor ?? '—')}</td>
                           <td>
-                            <span className={`etiqueta ${p.cancelado ? 'etiqueta-inativo' : 'etiqueta-vendedor'}`}>
-                              {p.status ?? '—'}
-                            </span>
+                            <span className={`etiqueta ${classeStatus(p)}`}>{p.status ?? '—'}</span>
                           </td>
                           <td className="num">{p.qtd_itens ?? '—'}</td>
                           <td className="num">{formatarMoeda(p.total)}</td>
@@ -300,6 +299,13 @@ export function RankingPage() {
       )}
     </section>
   )
+}
+
+/** Cor da situação do pedido: concluído em verde, cancelado em vermelho, o resto em amarelo. */
+function classeStatus(p: Pick<PedidoRanking, 'status' | 'cancelado'>) {
+  if (p.cancelado) return 'etiqueta-inativo'
+  if (/CONCLU/i.test(p.status ?? '')) return 'etiqueta-concluido'
+  return 'etiqueta-pendente'
 }
 
 function Cartao({ titulo, valor, detalhe, positivo }: { titulo: string; valor: string; detalhe?: string; positivo?: number | null }) {

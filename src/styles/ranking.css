@@ -47,6 +47,16 @@
   color: var(--erro);
 }
 
+.etiqueta-concluido {
+  background: #e7f5ec;
+  color: var(--sucesso);
+}
+
+.etiqueta-pendente {
+  background: var(--marca-suave);
+  color: #8a5a00;
+}
+
 .rk-cancelado td,
 .rk-cancelado th {
   color: var(--texto-suave);
