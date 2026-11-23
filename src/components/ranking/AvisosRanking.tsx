@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { detectarAvisos, primeiroNome, type AvisoRanking } from '../../lib/rankingVendas'
+import { tocarLideranca, tocarMeta } from '../../lib/sons'
 import type { RankingVendas } from '../../services/ranking.service'
 import { Avatar } from '../ui/Avatar'
 
@@ -61,6 +62,12 @@ export function AvisosRanking({ dados }: { dados: RankingVendas | null }) {
 export function CartaoAviso({ aviso, onFechar }: { aviso: AvisoRanking; onFechar: () => void }) {
   const v = aviso.vendedor
   const lider = aviso.tipo === 'lider'
+
+  // Som combinando com o aviso: fanfarra para o novo líder, carrilhão para a meta do dia.
+  useEffect(() => {
+    if (aviso.tipo === 'lider') tocarLideranca()
+    else tocarMeta()
+  }, [aviso.chave, aviso.tipo])
   return (
     <div className="rk-aviso-fundo" role="alertdialog" aria-labelledby="rk-aviso-titulo" onClick={onFechar}>
       <div className={`rk-aviso ${lider ? '' : 'rk-aviso-meta'}`} onClick={(e) => e.stopPropagation()}>

@@ -728,3 +728,12 @@ html.rk-tv-ativo body {
     align-items: start;
   }
 }
+
+.rk-tv-som {
+  align-self: center;
+  padding: 0.5em 1.1em;
+  border-radius: 999px;
+  background: var(--marca);
+  color: var(--preto);
+  font-weight: 700;
+}

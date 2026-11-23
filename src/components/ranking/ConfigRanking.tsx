@@ -24,7 +24,7 @@ type Props = {
   dados: RankingVendas
   ehAdmin: boolean
   onSalvo: () => void
-  onTestarAviso: () => void
+  onTestarAviso: (tipo: 'lider' | 'meta') => void
 }
 
 /** Metas do ranking (gerente/admin) e ligação dos usuários aos vendedores do Syscol (admin). */
@@ -150,9 +150,14 @@ export function ConfigRanking({ aberto, onFechar, dados, ehAdmin, onSalvo, onTes
           Último pedido recebido pelo webhook:{' '}
           {cfg.ultimo_webhook ? dataHora.format(new Date(cfg.ultimo_webhook)) : 'nenhum ainda'}.
         </p>
-        <button type="button" className="botao botao-secundario" onClick={onTestarAviso}>
-          Testar aviso na tela
-        </button>
+        <div className="rk-acoes">
+          <button type="button" className="botao botao-secundario" onClick={() => onTestarAviso('lider')}>
+            Testar aviso de novo líder
+          </button>
+          <button type="button" className="botao botao-secundario" onClick={() => onTestarAviso('meta')}>
+            Testar aviso de meta do dia
+          </button>
+        </div>
       </section>
     </Modal>
   )

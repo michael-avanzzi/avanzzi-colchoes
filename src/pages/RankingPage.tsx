@@ -4,11 +4,13 @@ import { Info, RefreshCw, Settings, Tv } from 'lucide-react'
 
 import { useAuth } from '../auth/AuthProvider'
 import { AvisosRanking, CartaoAviso } from '../components/ranking/AvisosRanking'
+import { BotaoSom } from '../components/ranking/BotaoSom'
 import { ConfigRanking } from '../components/ranking/ConfigRanking'
 import { GraficoVendasDia } from '../components/ranking/GraficoVendasDia'
 import { MetaLoja } from '../components/ranking/MetaLoja'
 import { ListaRanking, Podio } from '../components/ranking/Placar'
 import { useRankingVendas } from '../hooks/useRankingVendas'
+import { useSom } from '../hooks/useSom'
 import { formatarMoeda } from '../lib/datas'
 import {
   dataCurta,
@@ -43,6 +45,7 @@ export function RankingPage() {
   const { dados, erro, carregando, atualizar } = useRankingVendas(periodo.inicio, periodo.fim)
   const [configAberta, setConfigAberta] = useState(false)
   const [avisoTeste, setAvisoTeste] = useState<AvisoRanking | null>(null)
+  const som = useSom()
 
   const lider = dados?.vendedores.find((v) => v.posicao === 1 && v.valor > 0)
   const participacao = lider && dados && dados.resumo.valor > 0 ? (100 * lider.valor) / dados.resumo.valor : null
@@ -57,11 +60,16 @@ export function RankingPage() {
     setPeriodo(periodoDoPreset(p, hoje))
   }
 
-  function testarAviso() {
+  function testarAviso(tipo: 'lider' | 'meta') {
     const v = vendedores[0]
     if (!v) return
     setConfigAberta(false)
-    setAvisoTeste({ tipo: 'lider', vendedor: v, chave: 'teste' })
+    const chave = `teste-${tipo}-${Date.now()}`
+    if (tipo === 'lider') setAvisoTeste({ tipo, vendedor: v, chave })
+    else {
+      const meta = v.meta_diaria && v.meta_diaria > 0 ? v.meta_diaria : 5000
+      setAvisoTeste({ tipo, vendedor: { ...v, meta_diaria: meta, hoje_valor: Math.max(v.hoje_valor, meta) }, chave })
+    }
   }
 
   return (
@@ -75,6 +83,7 @@ export function RankingPage() {
           </p>
         </div>
         <div className="rk-acoes">
+          <BotaoSom som={som} className="botao-icone escuro" />
           <button type="button" className="botao-icone escuro" onClick={() => void atualizar()} aria-label="Atualizar agora" title="Atualizar agora">
             <RefreshCw size={18} className={carregando ? 'rk-girando' : ''} />
           </button>

@@ -5,9 +5,11 @@ import { LogOut, Maximize, X } from 'lucide-react'
 import { useAuth } from '../auth/AuthProvider'
 import { Logo } from '../components/layout/Logo'
 import { AvisosRanking } from '../components/ranking/AvisosRanking'
+import { BotaoSom } from '../components/ranking/BotaoSom'
 import { MetaLoja } from '../components/ranking/MetaLoja'
 import { ListaRanking, Podio } from '../components/ranking/Placar'
 import { useRankingVendas } from '../hooks/useRankingVendas'
+import { useSom } from '../hooks/useSom'
 import { hojeBrasilia, nomeDoMes, periodoDoPreset } from '../lib/rankingVendas'
 
 const hora = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
@@ -54,6 +56,7 @@ export function RankingTvPage() {
   const periodo = periodoDoPreset('mes', hoje)
   const { dados, erro } = useRankingVendas(periodo.inicio, periodo.fim, 60_000)
   useTelaAcesa()
+  const som = useSom()
 
   useEffect(() => {
     document.documentElement.classList.add('rk-tv-ativo')
@@ -83,6 +86,7 @@ export function RankingTvPage() {
           <span>{dados ? `Atualizado às ${hora.format(new Date(dados.gerado_em))}` : 'Carregando…'}</span>
         </div>
         <div className="rk-tv-botoes">
+          <BotaoSom som={som} />
           <button type="button" className="botao-icone" onClick={telaCheia} aria-label="Tela cheia" title="Tela cheia">
             <Maximize size={20} />
           </button>
@@ -99,6 +103,9 @@ export function RankingTvPage() {
       </header>
 
       {erro && <p className="alerta alerta-erro" role="alert">{erro}</p>}
+      {som.ligado && som.bloqueado && (
+        <p className="rk-tv-som" role="status">Toque na tela uma vez para ligar o som dos avisos</p>
+      )}
 
       {dados && (
         <main className="rk-tv-corpo">
