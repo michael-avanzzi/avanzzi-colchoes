@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import {
   CalendarDays,
-  KanbanSquare,
   LayoutDashboard,
   Trophy,
   Users,
@@ -24,8 +23,7 @@ type ItemMenu = {
 }
 
 const MENU: ItemMenu[] = [
-  { to: '/', rotulo: 'Kanban', icone: KanbanSquare },
-  { to: '/calendario', rotulo: 'Calendário', icone: CalendarDays },
+  { to: '/', rotulo: 'Agenda', icone: CalendarDays },
   { to: '/ranking', rotulo: 'Ranking', icone: Trophy, papeis: ['vendedor', 'gerente', 'admin'] },
   { to: '/painel', rotulo: 'Painel', icone: LayoutDashboard, papeis: ['gerente', 'admin'] },
   { to: '/usuarios', rotulo: 'Usuários', icone: Users, papeis: ['admin'] },

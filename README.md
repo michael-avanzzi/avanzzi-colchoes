@@ -1,6 +1,6 @@
 # Avanzzi Mobile
 
-Agenda compartilhada de atendimentos da Avanzzi Colchões: Kanban, calendário, histórico auditável e painel de comparecimento e conversão. Substitui o controle feito hoje no Trello.
+App da equipe Avanzzi Colchões: agenda de atendimentos (calendário com dia, semana e mês), histórico auditável, painel de comparecimento e conversão e ranking de vendas com os pedidos do Syscol. Substitui o controle feito antes no Trello.
 
 ## Stack
 

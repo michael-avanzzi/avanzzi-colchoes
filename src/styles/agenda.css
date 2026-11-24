@@ -43,8 +43,8 @@
 }
 
 .alerta-aviso {
-  background: var(--marca-suave);
-  color: #6b4500;
+  background: var(--atencao-suave);
+  color: var(--atencao-texto);
 }
 
 .campos-linha {
@@ -494,7 +494,7 @@
 
 .calendario {
   --fc-border-color: var(--borda);
-  --fc-today-bg-color: var(--marca-suave);
+  --fc-today-bg-color: rgb(123 30 46 / 4%);
   --fc-now-indicator-color: var(--erro);
   --fc-button-bg-color: var(--superficie);
   --fc-button-text-color: var(--texto);
@@ -596,4 +596,100 @@
   border: 1px solid var(--borda);
   border-radius: 10px;
   background: var(--fundo);
+}
+
+/* ---------- Navegação de datas da agenda ---------- */
+
+.navegacao-datas {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+}
+
+.seta-data {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--marca);
+  color: var(--sobre-marca);
+  cursor: pointer;
+}
+
+.seta-data:hover {
+  background: var(--marca-escura);
+}
+
+.titulo-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  min-width: 0;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-align: center;
+  cursor: pointer;
+}
+
+.titulo-data:hover {
+  background: var(--fundo);
+}
+
+.titulo-data svg {
+  flex-shrink: 0;
+  color: var(--marca);
+}
+
+.seletor-data {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.navegacao-datas-extra {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+@media (min-width: 861px) {
+  .navegacao-datas {
+    grid-template-columns: 48px minmax(240px, auto) 48px 1fr;
+  }
+
+  .navegacao-datas-extra {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 860px) {
+  /* Fica logo abaixo da barra do topo enquanto a agenda rola. */
+  .navegacao-datas {
+    top: calc(60px + env(safe-area-inset-top));
+  }
 }

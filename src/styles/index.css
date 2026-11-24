@@ -1,10 +1,19 @@
 /* Avanzzi Mobile — base visual.
- * Marca: amarelo/laranja #FAA300, preto e branco (confirmar com o manual oficial). */
+ * Destaque: vermelho bordô (vinho). Logo: vermelho da Avanzzi Colchões.
+ * Amarelo só para atenção (avisos, pedidos pendentes). */
 
 :root {
-  --marca: #faa300;
-  --marca-escura: #d98c00;
-  --marca-suave: #fff4dc;
+  --marca: #7b1e2e;
+  --marca-escura: #5c1522;
+  --marca-suave: #f6e7ea;
+  /* Texto sobre o bordô. */
+  --sobre-marca: #ffffff;
+  /* Bordô mais claro, para destacar sobre fundo preto (menu, TV, avisos). */
+  --marca-clara: #e0566a;
+  /* Atenção (avisos, pendências): amarelo. */
+  --atencao: #faa300;
+  --atencao-suave: #fff4dc;
+  --atencao-texto: #6b4500;
   /* Vermelho do logo Avanzzi Colchões (marca do app). */
   --vermelho-marca: #ff3b30;
   --preto: #111111;
@@ -126,7 +135,7 @@ textarea {
 
 .botao-primario {
   background: var(--marca);
-  color: var(--preto);
+  color: var(--sobre-marca);
 }
 
 .botao-primario:not(:disabled):hover {
@@ -333,7 +342,7 @@ textarea {
 
 .menu-item.active {
   background: var(--marca);
-  color: var(--preto);
+  color: var(--sobre-marca);
   font-weight: 700;
 }
 
@@ -352,7 +361,7 @@ textarea {
   height: 36px;
   border-radius: 50%;
   background: var(--marca);
-  color: var(--preto);
+  color: var(--sobre-marca);
   font-weight: 800;
   flex-shrink: 0;
 }
@@ -596,12 +605,17 @@ textarea {
 
 .etiqueta-gerente {
   background: var(--marca-suave);
-  color: #8a5a00;
+  color: var(--marca);
 }
 
 .etiqueta-admin {
   background: var(--preto);
-  color: var(--marca);
+  color: var(--marca-clara);
+}
+
+.etiqueta-tv {
+  background: #eef1f5;
+  color: #34404f;
 }
 
 .etiqueta-inativo {

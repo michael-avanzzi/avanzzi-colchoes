@@ -10,7 +10,8 @@ const FONTE = "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif
 
 const COR = {
   preto: '#111111',
-  marca: '#FAA300',
+  /** Vermelho do logo Avanzzi. */
+  marca: '#FF3B30',
   fundo: '#fafaf8',
   texto: '#1d1d1b',
   suave: '#6b6b66',
@@ -52,8 +53,29 @@ function desenharLogo(ctx: CanvasRenderingContext2D, x: number, y: number, taman
   ctx.save()
   ctx.translate(x, y)
   ctx.scale(s, s)
+  // Mesmo desenho de public/icons/icon.svg: "A" vermelho, nuvem branca e o "zz" do sono.
   ctx.fillStyle = COR.marca
-  ctx.fill(new Path2D('M256 104 L392 408 H330 L302 342 H210 L182 408 H120 Z M228 296 H284 L256 228 Z'), 'evenodd')
+  ctx.fill(
+    new Path2D(
+      'M256 84 C267 84 276 90 281 101 L392 352 H318 L301 310 H211 L194 352 H120 L231 101 C236 90 245 84 256 84 Z M233 252 H279 L256 192 Z',
+    ),
+    'evenodd',
+  )
+  ctx.fillStyle = '#ffffff'
+  const nuvem = new Path2D()
+  for (const [cx, cy, r] of [[256, 370, 54], [180, 394, 38], [332, 394, 38], [140, 414, 22], [372, 414, 22]]) {
+    nuvem.moveTo(cx + r, cy)
+    nuvem.arc(cx, cy, r, 0, Math.PI * 2)
+  }
+  nuvem.roundRect(118, 394, 276, 42, 21)
+  ctx.fill(nuvem)
+  ctx.strokeStyle = '#ffffff'
+  ctx.lineCap = 'round'
+  ctx.lineJoin = 'round'
+  ctx.lineWidth = 11
+  ctx.stroke(new Path2D('M330 104 H364 L330 138 H364'))
+  ctx.lineWidth = 8
+  ctx.stroke(new Path2D('M380 62 H402 L380 84 H402'))
   ctx.restore()
 }
 

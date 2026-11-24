@@ -101,7 +101,7 @@ function Confete() {
     if (!ctx) return
     const w = (c.width = c.offsetWidth)
     const h = (c.height = c.offsetHeight)
-    const cores = ['#faa300', '#ffd166', '#1f8a4c', '#4f7fd9', '#e4572e', '#ffffff']
+    const cores = ['#e0566a', '#ffd166', '#1f8a4c', '#4f7fd9', '#ff3b30', '#ffffff']
     const pecas = Array.from({ length: 120 }, () => ({
       x: Math.random() * w,
       y: -20 - Math.random() * h * 0.6,

@@ -1,5 +1,6 @@
 /* Ranking de vendas (Syscol): página do app e tela da TV.
- * Medalhas: ouro, prata e bronze só no pódio; o resto segue a marca (amarelo + preto). */
+ * Medalhas: ouro, prata e bronze só no pódio; o resto segue a marca (bordô + preto).
+ * Sobre fundo preto (meta da loja, TV, avisos) o bordô usa a versão clara. */
 
 :root {
   --rk-ouro: #e0a100;
@@ -53,8 +54,8 @@
 }
 
 .etiqueta-pendente {
-  background: var(--marca-suave);
-  color: #8a5a00;
+  background: var(--atencao-suave);
+  color: var(--atencao-texto);
 }
 
 .rk-cancelado td,
@@ -88,7 +89,7 @@
 }
 
 .rk-meta .rk-rotulo {
-  color: var(--marca);
+  color: var(--marca-clara);
 }
 
 .rk-meta-topo {
@@ -115,7 +116,7 @@
   font-size: 2.4em;
   font-weight: 800;
   line-height: 1;
-  color: var(--marca);
+  color: var(--marca-clara);
   font-variant-numeric: tabular-nums;
 }
 
@@ -133,7 +134,7 @@
 .rk-meta-barra {
   height: 100%;
   border-radius: 999px;
-  background: var(--marca);
+  background: var(--marca-clara);
   transition: width 0.6s ease;
 }
 
@@ -253,7 +254,7 @@
   overflow: hidden;
   border-radius: 50%;
   background: var(--marca);
-  color: var(--preto);
+  color: var(--sobre-marca);
   font-weight: 800;
 }
 
@@ -526,7 +527,7 @@
   overflow: hidden;
   background: var(--preto);
   color: #fff;
-  border: 3px solid var(--marca);
+  border: 3px solid var(--marca-clara);
   border-radius: 24px;
   text-align: center;
   box-shadow: 0 30px 80px rgb(0 0 0 / 45%);
@@ -537,7 +538,7 @@
 }
 
 .rk-aviso .rk-foto {
-  box-shadow: 0 0 0 5px var(--preto), 0 0 0 9px var(--marca);
+  box-shadow: 0 0 0 5px var(--preto), 0 0 0 9px var(--marca-clara);
 }
 
 .rk-aviso-meta .rk-foto {
@@ -550,7 +551,7 @@
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--marca);
+  color: var(--marca-clara);
 }
 
 .rk-aviso-meta .rk-aviso-chamada {
@@ -601,6 +602,7 @@ html.rk-tv-ativo body {
 }
 
 .rk-tv {
+  --marca: var(--marca-clara);
   --superficie: #1a1a1a;
   --borda: #2e2e2e;
   --texto: #f5f5f5;
@@ -733,7 +735,7 @@ html.rk-tv-ativo body {
   align-self: center;
   padding: 0.5em 1.1em;
   border-radius: 999px;
-  background: var(--marca);
+  background: var(--atencao);
   color: var(--preto);
   font-weight: 700;
 }

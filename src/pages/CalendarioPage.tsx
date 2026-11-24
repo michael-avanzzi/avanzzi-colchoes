@@ -1,15 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import ptBrLocale from '@fullcalendar/core/locales/pt-br'
 import type { DatesSetArg, EventInput } from '@fullcalendar/core'
-import { ImageDown, Plus } from 'lucide-react'
+import { CalendarSearch, ChevronLeft, ChevronRight, ImageDown, Plus } from 'lucide-react'
 
 import { AgendamentoModais, type EstadoModal } from '../components/agendamentos/AgendamentoModais'
 import { FiltroVendedor } from '../components/agendamentos/FiltroVendedor'
 import { ImagemHorarios } from '../components/agendamentos/ImagemHorarios'
+import { Pendencias } from '../components/agendamentos/Pendencias'
 import { useAuth } from '../auth/AuthProvider'
 import { useAgendamentos } from '../hooks/useAgendamentos'
 import { useCadastros } from '../hooks/useCadastros'
@@ -20,6 +22,19 @@ type FiltroColuna = '' | 'todas' | Coluna
 
 const ehCelular = () => window.matchMedia('(max-width: 860px)').matches
 
+type Visao = 'timeGridDay' | 'timeGridWeek' | 'dayGridMonth'
+const VISOES: [Visao, string][] = [
+  ['timeGridDay', 'Dia'],
+  ['timeGridWeek', 'Semana'],
+  ['dayGridMonth', 'Mês'],
+]
+const PASSO: Record<Visao, string> = { timeGridDay: 'Dia', timeGridWeek: 'Semana', dayGridMonth: 'Mês' }
+const fmtDiaLongo = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
+
+function paraInput(d: Date) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
 export function CalendarioPage() {
   const { nomeVendedor } = useCadastros()
   const { perfil } = useAuth()
@@ -28,6 +43,23 @@ export function CalendarioPage() {
   const [vendedor, setVendedor] = useState('')
   const [filtroColuna, setFiltroColuna] = useState<FiltroColuna>('')
   const [modal, setModal] = useState<EstadoModal>(null)
+  const calendario = useRef<FullCalendar>(null)
+  const seletorData = useRef<HTMLInputElement>(null)
+  const toque = useRef<{ x: number; y: number } | null>(null)
+  const [titulo, setTitulo] = useState('')
+  const [ehHoje, setEhHoje] = useState(true)
+  const [parametros, setParametros] = useSearchParams()
+
+  // Link de notificação/lembrete: /?agendamento=<id> abre o detalhe.
+  const idDoLink = parametros.get('agendamento')
+  useEffect(() => {
+    if (!idDoLink) return
+    const t = window.setTimeout(() => {
+      setModal({ tipo: 'detalhe', id: idDoLink })
+      setParametros({}, { replace: true })
+    }, 0)
+    return () => window.clearTimeout(t)
+  }, [idDoLink, setParametros])
 
   const { agendamentos, carregando, erro, recarregar } = useAgendamentos(
     periodo?.inicio ?? null,
@@ -60,7 +92,13 @@ export function CalendarioPage() {
     [agendamentos, vendedor, filtroColuna, nomeVendedor],
   )
 
+  const api = () => calendario.current?.getApi()
+  const visao = (periodo?.visao ?? (ehCelular() ? 'timeGridDay' : 'timeGridWeek')) as Visao
+
   function aoMudarDatas(arg: DatesSetArg) {
+    const hoje = new Date()
+    setEhHoje(arg.view.currentStart <= hoje && hoje < arg.view.currentEnd)
+    setTitulo(arg.view.type === 'timeGridDay' ? fmtDiaLongo.format(arg.view.currentStart) : arg.view.title)
     setPeriodo((p) =>
       p &&
       p.inicio.getTime() === arg.start.getTime() &&
@@ -78,11 +116,62 @@ export function CalendarioPage() {
   return (
     <section className="pagina pagina-larga">
       <header className="pagina-cabecalho pagina-cabecalho-acoes">
-        <h1>Calendário</h1>
+        <h1>Agenda</h1>
         <button type="button" className="botao botao-primario" onClick={() => setModal({ tipo: 'novo' })}>
           <Plus size={18} aria-hidden /> Novo agendamento
         </button>
       </header>
+
+      <div className="navegacao-datas" role="group" aria-label="Navegar entre datas">
+        <button type="button" className="seta-data" onClick={() => api()?.prev()} aria-label={`${PASSO[visao]} anterior`}>
+          <ChevronLeft size={26} aria-hidden />
+        </button>
+        <button
+          type="button"
+          className="titulo-data"
+          onClick={() => {
+            const el = seletorData.current
+            if (!el) return
+            try {
+              el.showPicker()
+            } catch {
+              el.focus()
+            }
+          }}
+          aria-label={`${titulo}. Escolher outra data`}
+        >
+          <span className="primeira-maiuscula">{titulo}</span>
+          <CalendarSearch size={16} aria-hidden />
+        </button>
+        <input
+          ref={seletorData}
+          type="date"
+          className="seletor-data"
+          tabIndex={-1}
+          aria-hidden
+          value={periodo ? paraInput(periodo.inicio) : ''}
+          onChange={(e) => {
+            if (!e.target.value) return
+            const [a, m, d] = e.target.value.split('-').map(Number)
+            api()?.gotoDate(new Date(a, m - 1, d))
+          }}
+        />
+        <button type="button" className="seta-data" onClick={() => api()?.next()} aria-label={`Próximo ${PASSO[visao].toLowerCase()}`}>
+          <ChevronRight size={26} aria-hidden />
+        </button>
+        <div className="navegacao-datas-extra">
+          <button type="button" className="botao botao-secundario botao-pequeno" onClick={() => api()?.today()} disabled={ehHoje}>
+            Hoje
+          </button>
+          <div className="segmentado" role="group" aria-label="Visualização">
+            {VISOES.map(([v, rotulo]) => (
+              <button key={v} type="button" aria-pressed={visao === v} className={visao === v ? 'ativo' : ''} onClick={() => api()?.changeView(v)}>
+                {rotulo}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
       <div className="barra-filtros">
         <FiltroVendedor valor={vendedor} onChange={setVendedor} />
@@ -112,15 +201,35 @@ export function CalendarioPage() {
         {carregando && periodo && <span className="spinner spinner-suave" role="status" aria-label="Carregando" />}
       </div>
 
+      <Pendencias sinal={agendamentos} onAbrir={(id) => setModal({ tipo: 'detalhe', id })} />
       {erro && <p className="alerta alerta-erro" role="alert">{erro}</p>}
 
-      <div className="calendario">
+      <div
+        className="calendario"
+        onTouchStart={(e) => {
+          const t = e.touches[0]
+          toque.current = { x: t.clientX, y: t.clientY }
+        }}
+        onTouchEnd={(e) => {
+          const inicio = toque.current
+          toque.current = null
+          if (!inicio) return
+          const t = e.changedTouches[0]
+          const dx = t.clientX - inicio.x
+          const dy = t.clientY - inicio.y
+          // Arrastar o dedo para o lado troca de dia (ou semana/mês).
+          if (Math.abs(dx) > 70 && Math.abs(dy) < 50) {
+            if (dx < 0) api()?.next()
+            else api()?.prev()
+          }
+        }}
+      >
         <FullCalendar
+          ref={calendario}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           locale={ptBrLocale}
           initialView={ehCelular() ? 'timeGridDay' : 'timeGridWeek'}
-          headerToolbar={{ left: 'prev,next today', center: 'title', right: 'timeGridDay,timeGridWeek,dayGridMonth' }}
-          buttonText={{ today: 'Hoje', day: 'Dia', week: 'Semana', month: 'Mês' }}
+          headerToolbar={false}
           height="auto"
           allDaySlot={false}
           slotMinTime="07:00:00"
