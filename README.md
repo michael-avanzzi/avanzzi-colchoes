@@ -34,6 +34,7 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261111_06_fotos_e_lembretes.sql` | Fotos de perfil (bucket `avatares`) e lembretes por notificação (`push_inscricoes`, `lembretes_enviados`) |
 | `20261123_07_papel_tv.sql` | Papel `tv` (conta da TV da sala de vendas, só vê o Ranking) |
 | `20261123_08_vendas_syscol.sql` | Vendas do Syscol (schema `syscol`), `rpc_ranking_vendas`, metas e avisos do Ranking |
+| `20261124_09_vendas_por_item.sql` | Venda de cada vendedor pelo vendedor dos itens, igual ao Syscol |
 
 ## Testes
 
