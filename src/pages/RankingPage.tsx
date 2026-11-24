@@ -284,7 +284,8 @@ export function RankingPage() {
               <li>Os pedidos vêm do Syscol: pelo webhook, na hora em que são gravados, e por uma sincronização com a API a cada 10 minutos, que traz cancelamentos e alterações.</li>
               <li>O período usa a <strong>data de emissão</strong> do pedido. "Hoje" e "este mês" seguem o horário de Brasília.</li>
               <li>Pedidos cancelados ficam fora de todos os totais.</li>
-              <li>Cada venda conta para o vendedor marcado nos itens do pedido, como no Syscol. Se os itens de um pedido forem de vendedores diferentes, cada um recebe a parte dos seus itens.</li>
+              <li><strong>Venda dividida</strong>: pedido com dois vendedores é repartido pelo percentual de cada um no Syscol (por isso o valor de cada vendedor pode diferir do relatório do Syscol, que credita o pedido inteiro a um só).</li>
+              <li>Os demais pedidos contam para o vendedor marcado nos itens, como no Syscol.</li>
               <li><strong>Meta do mês</strong> vem do mapa de meta mensal do Syscol. A marca na barra mostra onde a loja deveria estar hoje vendendo o mesmo valor todo dia.</li>
               <li><strong>Meta do dia</strong>: o vendedor bate a meta quando o que vendeu hoje chega à meta dele (ou à meta padrão).</li>
               {gestao && <li><strong>Margem bruta</strong> = 1 − (custo de reposição dos itens ÷ valor vendido). Só gerentes e administradores veem.</li>}

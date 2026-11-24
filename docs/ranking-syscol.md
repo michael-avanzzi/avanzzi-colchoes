@@ -20,7 +20,8 @@ pg_cron (a cada 2 min) ──▶ Edge Function syscol-avisos ──▶ Web Push 
 |---|---|
 | Período | Data de emissão do pedido, no horário de Brasília |
 | Cancelados | Fora de todos os totais (status 2 da API ou data de cancelamento) |
-| Venda de cada vendedor | Pelo vendedor marcado em cada item do pedido, como no Syscol. O percentual de divisão do pedido (usado para comissão) não entra |
+| Venda dividida | Pedido com vendedor secundário é repartido pelo percentual de venda de cada um (50/50 se não houver). Decisão da gestão: aqui o ranking difere do relatório do Syscol, que credita o pedido inteiro ao vendedor dos itens |
+| Demais pedidos | Pelo vendedor marcado em cada item, como no Syscol |
 | Custo / margem | Custo de reposição dos itens não cancelados |
 | Meta do mês | Mapa de meta mensal do Syscol; a meta em **Configurar** só vale se o Syscol não tiver meta no mês |
 | Meta do dia | Meta própria do vendedor ou a meta diária padrão (em **Configurar**) |
