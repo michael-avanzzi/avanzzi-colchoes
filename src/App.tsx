@@ -5,6 +5,7 @@ import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
 import { CalendarioPage } from './pages/CalendarioPage'
 import { LoginPage } from './pages/LoginPage'
+import { MeuDiaPage } from './pages/MeuDiaPage'
 import { PainelPage } from './pages/PainelPage'
 import { RankingPage } from './pages/RankingPage'
 import { RankingTvPage } from './pages/RankingTvPage'
@@ -34,9 +35,10 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<CalendarioPage />} />
-            {/* Endereço antigo da agenda (o Kanban saiu: a agenda é a tela inicial). */}
-            <Route path="calendario" element={<Navigate to="/" replace />} />
+            <Route index element={<MeuDiaPage />} />
+            <Route path="agenda" element={<CalendarioPage />} />
+            {/* Endereço antigo da agenda. */}
+            <Route path="calendario" element={<Navigate to="/agenda" replace />} />
             <Route
               path="ranking"
               element={

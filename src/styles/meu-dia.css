@@ -1,0 +1,307 @@
+/* Meu dia: lista de atendimentos do dia com o próximo passo em um toque.
+ * A faixa à esquerda de cada cartão tem a cor da etapa (a mesma do calendário). */
+
+.md-pagina {
+  max-width: 760px;
+}
+
+.md-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-resumo li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  font-size: 0.88rem;
+  color: var(--texto-suave);
+}
+
+.md-resumo strong {
+  color: var(--texto);
+}
+
+.md-resumo-atencao {
+  background: var(--atencao-suave) !important;
+  border-color: transparent !important;
+  color: var(--atencao-texto) !important;
+}
+
+.md-resumo-atencao strong {
+  color: var(--atencao-texto);
+}
+
+.md-resumo-ok {
+  background: #e7f5ec !important;
+  border-color: transparent !important;
+  color: var(--sucesso) !important;
+}
+
+.md-resumo-ok strong {
+  color: var(--sucesso);
+}
+
+.md-lista-area {
+  min-height: 40dvh;
+}
+
+.md-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Cartão ---------- */
+
+.md-cartao {
+  overflow: hidden;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-left: 6px solid var(--cor);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+}
+
+.md-cartao-encerrado {
+  opacity: 0.6;
+}
+
+.md-cartao-corpo {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 4px 12px;
+  width: 100%;
+  padding: 14px 14px 10px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.md-hora {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.md-hora strong {
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.md-hora small {
+  font-size: 0.75rem;
+  color: var(--texto-suave);
+}
+
+.md-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.md-info strong {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.md-info span {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.md-obs {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-style: italic;
+}
+
+.md-etapa {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cor) 13%, #fff);
+  color: var(--cor);
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.md-alerta {
+  margin: 0 14px 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--atencao-texto);
+}
+
+/* ---------- Ações ---------- */
+
+.md-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.md-acao {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 96px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  background: var(--superficie);
+  color: var(--texto);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.md-acao:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.md-acao-principal {
+  border-color: transparent;
+  background: var(--marca);
+  color: var(--sobre-marca);
+}
+
+.md-acao-chegou.md-acao-principal,
+.md-acao-vendeu.md-acao-principal {
+  background: var(--sucesso);
+}
+
+.md-acao-nao_veio,
+.md-acao-nao_fechou {
+  color: var(--texto-suave);
+}
+
+.md-contato {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.md-icone {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--fundo);
+  border: 1px solid var(--borda);
+  color: var(--texto);
+}
+
+.md-whatsapp {
+  background: #e7f8ee;
+  border-color: transparent;
+  color: #128c4a;
+}
+
+/* ---------- Marca do horário atual ---------- */
+
+.md-agora {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--marca);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.md-agora::before,
+.md-agora::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: var(--marca);
+  border-radius: 2px;
+}
+
+.md-agora::before {
+  flex: 0 0 12px;
+}
+
+/* ---------- Vazio, encerrados e aviso ---------- */
+
+.md-vazio {
+  padding: 40px 16px;
+}
+
+.md-encerrados {
+  align-self: center;
+}
+
+.md-aviso {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 10px 10px 10px 16px;
+  border-radius: 14px;
+  background: var(--preto);
+  color: #fff;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 30%);
+  transform: translateX(-50%);
+}
+
+.md-aviso-erro {
+  background: var(--erro);
+}
+
+.md-aviso-desfazer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 12%);
+  color: var(--marca-clara);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  /* Acima do menu inferior. */
+  .md-aviso {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  .md-cartao-corpo {
+    grid-template-columns: 54px minmax(0, 1fr);
+  }
+
+  .md-etapa {
+    grid-column: 2;
+    justify-self: start;
+  }
+}

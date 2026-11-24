@@ -3,6 +3,7 @@ import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import {
   CalendarDays,
   LayoutDashboard,
+  ListChecks,
   Trophy,
   Users,
   type LucideIcon,
@@ -23,7 +24,8 @@ type ItemMenu = {
 }
 
 const MENU: ItemMenu[] = [
-  { to: '/', rotulo: 'Agenda', icone: CalendarDays },
+  { to: '/', rotulo: 'Meu dia', icone: ListChecks },
+  { to: '/agenda', rotulo: 'Agenda', icone: CalendarDays },
   { to: '/ranking', rotulo: 'Ranking', icone: Trophy, papeis: ['vendedor', 'gerente', 'admin'] },
   { to: '/painel', rotulo: 'Painel', icone: LayoutDashboard, papeis: ['gerente', 'admin'] },
   { to: '/usuarios', rotulo: 'Usuários', icone: Users, papeis: ['admin'] },

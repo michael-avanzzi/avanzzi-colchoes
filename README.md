@@ -1,6 +1,6 @@
 # Avanzzi Mobile
 
-App da equipe Avanzzi Colchões: agenda de atendimentos (calendário com dia, semana e mês), histórico auditável, painel de comparecimento e conversão e ranking de vendas com os pedidos do Syscol. Substitui o controle feito antes no Trello.
+App da equipe Avanzzi Colchões: Meu dia (atendimentos do dia com o próximo passo em um toque), agenda (calendário com dia, semana e mês), histórico auditável, painel de comparecimento e conversão e ranking de vendas com os pedidos do Syscol. Substitui o controle feito antes no Trello.
 
 ## Stack
 
@@ -39,7 +39,7 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 
 ## Testes
 
-- **Front (Vitest):** `npm test` cobre as regras de etapa do Kanban, as permissões exibidas e as datas.
+- **Front (Vitest):** `npm test` cobre as regras de etapa, os botões do Meu dia, as permissões exibidas, as datas e o ranking.
 - **Banco:** cole `supabase/testes/regras_agendamento.sql` no SQL Editor e rode. São 32 verificações: criação, conflito, edição simultânea, histórico, reagendamento, cancelamento, comparecimento, venda, troca de vendedor, imutabilidade e bloqueio de escrita direta. O script cria dados fictícios e **desfaz tudo** no final com um erro proposital. O resultado esperado é um erro que começa com `TESTES OK`.
 
 ### Regras de segurança
