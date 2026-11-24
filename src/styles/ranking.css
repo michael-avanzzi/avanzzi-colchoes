@@ -631,7 +631,7 @@ html.rk-tv-ativo body {
   gap: 1em;
 }
 
-.rk-tv-marca .logo-texto span {
+.rk-tv-marca .logo-texto > span {
   display: none;
 }
 

@@ -1,10 +1,12 @@
-/* Avanzzi Agendamentos — base visual.
+/* Avanzzi Mobile — base visual.
  * Marca: amarelo/laranja #FAA300, preto e branco (confirmar com o manual oficial). */
 
 :root {
   --marca: #faa300;
   --marca-escura: #d98c00;
   --marca-suave: #fff4dc;
+  /* Vermelho do logo Avanzzi Colchões (marca do app). */
+  --vermelho-marca: #ff3b30;
   --preto: #111111;
   --preto-2: #1c1c1c;
 
@@ -74,19 +76,31 @@ textarea {
   line-height: 1.1;
 }
 
-.logo-texto strong {
+.logo-nome {
+  font-size: 1.15rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: -0.01em;
+  color: var(--vermelho-marca);
 }
 
-.logo-texto span {
-  font-size: 0.78rem;
-  color: var(--marca);
+/* O "zz" menor e elevado, como no logo da loja. */
+.logo-zz {
+  display: inline-block;
+  font-size: 0.72em;
+  transform: translateY(-0.32em);
+  letter-spacing: 0.02em;
+}
+
+.logo-texto > span {
+  font-size: 0.72rem;
   font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 70%);
 }
 
-.logo-grande .logo-texto strong {
-  font-size: 1.4rem;
+.logo-grande .logo-nome {
+  font-size: 1.7rem;
 }
 
 /* ---------- Botões ---------- */
@@ -262,8 +276,8 @@ textarea {
   box-shadow: 0 20px 60px rgb(0 0 0 / 35%);
 }
 
-.login-card .logo-texto strong {
-  color: var(--preto);
+.login-card .logo-texto > span {
+  color: var(--texto-suave);
 }
 
 .login-titulo {

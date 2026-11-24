@@ -1,4 +1,4 @@
-/* Avanzzi Agendamentos — notificações push (importado pelo service worker gerado pelo Workbox). */
+/* Avanzzi Mobile — notificações push (importado pelo service worker gerado pelo Workbox). */
 
 self.addEventListener('push', (evento) => {
   let dados = {}
@@ -8,7 +8,7 @@ self.addEventListener('push', (evento) => {
     dados = { body: evento.data ? evento.data.text() : '' }
   }
 
-  const titulo = dados.title || 'Avanzzi Agendamentos'
+  const titulo = dados.title || 'Avanzzi Mobile'
   evento.waitUntil(
     self.registration.showNotification(titulo, {
       body: dados.body || '',

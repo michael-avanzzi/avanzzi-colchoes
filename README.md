@@ -1,4 +1,4 @@
-# Avanzzi Agendamentos
+# Avanzzi Mobile
 
 Agenda compartilhada de atendimentos da Avanzzi Colchões: Kanban, calendário, histórico auditável e painel de comparecimento e conversão. Substitui o controle feito hoje no Trello.
 

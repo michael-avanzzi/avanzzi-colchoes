@@ -17,9 +17,9 @@ export default defineConfig({
       includeAssets: ['icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/favicon-32.png', 'push-sw.js'],
       manifest: {
         id: '/',
-        name: 'Avanzzi Agendamentos',
-        short_name: 'Agendamentos',
-        description: 'Agenda de atendimentos da Avanzzi Colchões.',
+        name: 'Avanzzi Mobile',
+        short_name: 'Avanzzi Mobile',
+        description: 'App da equipe Avanzzi Colchões: agenda de atendimentos e ranking de vendas.',
         lang: 'pt-BR',
         start_url: '/',
         scope: '/',
@@ -29,7 +29,7 @@ export default defineConfig({
         theme_color: '#111111',
         categories: ['business', 'productivity'],
         icons: [
-          // Provisórios: gerados de public/icons/icon.svg por `npm run icones`.
+          // Gerados de public/icons/icon.svg por `npm run icones`.
           { src: '/icons/pwa-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: '/icons/pwa-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
           { src: '/icons/pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },

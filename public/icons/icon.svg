@@ -1,4 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#111111"/>
-  <path d="M256 104 L392 408 H330 L302 342 H210 L182 408 H120 Z M228 296 H284 L256 228 Z" fill="#FAA300"/>
+  <!-- Avanzzi Mobile: o "A" vermelho da Avanzzi Colchões apoiado na nuvem, com o "zz" do sono. -->
+  <defs>
+    <linearGradient id="vermelho" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF4A3D"/>
+      <stop offset="1" stop-color="#D10E1B"/>
+    </linearGradient>
+    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E1E20"/>
+      <stop offset="1" stop-color="#0A0A0B"/>
+    </linearGradient>
+  </defs>
+  <rect id="fundo-icone" width="512" height="512" rx="112" fill="url(#fundo)"/>
+  <!-- A -->
+  <path d="M256 84 C267 84 276 90 281 101 L392 352 H318 L301 310 H211 L194 352 H120 L231 101 C236 90 245 84 256 84 Z M233 252 H279 L256 192 Z" fill="url(#vermelho)"/>
+  <!-- nuvem -->
+  <g fill="#FFFFFF">
+    <circle cx="256" cy="370" r="54"/>
+    <circle cx="180" cy="394" r="38"/>
+    <circle cx="332" cy="394" r="38"/>
+    <circle cx="140" cy="414" r="22"/>
+    <circle cx="372" cy="414" r="22"/>
+    <rect x="118" y="394" width="276" height="42" rx="21"/>
+  </g>
+  <!-- zz -->
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M330 104 H364 L330 138 H364" stroke-width="11"/>
+    <path d="M380 62 H402 L380 84 H402" stroke-width="8"/>
+  </g>
 </svg>
