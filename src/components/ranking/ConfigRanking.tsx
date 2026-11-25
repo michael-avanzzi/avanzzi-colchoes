@@ -63,7 +63,10 @@ export function ConfigRanking({ aberto, onFechar, dados, ehAdmin, onSalvo, onTes
       <section className="rk-config-secao" aria-labelledby="rk-config-vend">
         <h3 id="rk-config-vend">Vendedores</h3>
         <p className="texto-suave">
-          Meta diária própria (vazio = usa a padrão){ehAdmin ? ', usuário do app ligado a cada vendedor do Syscol e quem aparece no ranking' : ''}.
+          A meta diária de cada vendedor é automática: a meta do dia da loja (o que falta para a meta do mês ÷ dias de venda
+          que faltam) dividida entre os usuários com papel Vendedor. Administradores e gerentes ficam de fora. Preencha só
+          para dar a alguém uma meta própria (vazio = automática)
+          {ehAdmin ? '. Aqui também se liga o usuário do app a cada vendedor do Syscol e se escolhe quem aparece no ranking' : ''}.
           A foto vem do perfil do usuário ligado.
         </p>
         <ul className="rk-config-lista">
@@ -80,7 +83,7 @@ export function ConfigRanking({ aberto, onFechar, dados, ehAdmin, onSalvo, onTes
                       <input
                         inputMode="decimal"
                         defaultValue={v?.meta_propria && v.meta_diaria ? String(v.meta_diaria) : ''}
-                        placeholder={cfg.meta_diaria_padrao ? `Padrão ${cfg.meta_diaria_padrao}` : 'Sem meta'}
+                        placeholder={v?.meta_diaria && !v.meta_propria ? `Automática ${Math.round(v.meta_diaria)}` : 'Automática'}
                         onBlur={(e) => {
                           const novo = numeroOuNull(e.target.value)
                           const atual = v?.meta_propria ? v.meta_diaria : null
@@ -188,7 +191,7 @@ function FormMetas({
   return (
     <form className="form" onSubmit={salvar}>
       <label className="campo">
-        <span>Meta diária padrão por vendedor (R$)</span>
+        <span>Meta diária por vendedor (R$), só para meses sem meta no Syscol</span>
         <input inputMode="decimal" value={metaDia} onChange={(e) => setMetaDia(e.target.value)} placeholder="Ex.: 5000" />
       </label>
       <label className="campo">

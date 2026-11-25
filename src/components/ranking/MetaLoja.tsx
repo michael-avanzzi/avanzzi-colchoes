@@ -35,6 +35,18 @@ export function MetaLoja({ mes, podeConfigurar }: { mes: RankingVendas['mes']; p
         {m.meta && <div className="rk-meta-ritmo" style={{ left: `${Math.min(100, m.ritmoPct)}%` }} title="Ritmo esperado para hoje" />}
       </div>
 
+      {mes.meta_dia_loja !== null && mes.meta_dia_loja > 0 && (
+        <p className="rk-meta-hoje">
+          Meta de hoje: <strong>{moeda0.format(mes.meta_dia_loja)}</strong> para a loja
+          {mes.meta_dia_vendedor !== null && mes.vendedores_na_meta > 0 && (
+            <>
+              {' '}· <strong>{moeda0.format(mes.meta_dia_vendedor)} por vendedor</strong> ({mes.vendedores_na_meta}{' '}
+              {mes.vendedores_na_meta === 1 ? 'vendedor' : 'vendedores'})
+            </>
+          )}
+        </p>
+      )}
+
       <div className="rk-meta-rodape">
         {!m.meta ? (
           <span>
@@ -46,7 +58,7 @@ export function MetaLoja({ mes, podeConfigurar }: { mes: RankingVendas['mes']; p
         ) : (
           <>
             <span>Faltam <strong>{moeda0.format(m.falta ?? 0)}</strong></span>
-            {m.porDia !== null && (
+            {m.porDia !== null && !(mes.meta_dia_loja && mes.meta_dia_loja > 0) && (
               <span>
                 <strong>{moeda0.format(m.porDia)} por dia</strong> nos {m.diasRestantes}{' '}
                 {m.diasRestantes === 1 ? 'dia que resta' : 'dias que restam'}

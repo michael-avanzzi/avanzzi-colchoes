@@ -41,7 +41,10 @@ function ranking(vendedores: VendedorRanking[]): RankingVendas {
       valor: 0, pedidos: 0, ticket_medio: null, margem_pct: null,
       anterior_inicio: '2026-10-09', anterior_fim: '2026-10-31', anterior_valor: 0, anterior_pedidos: 0,
     },
-    mes: { inicio: '2026-11-01', fim: '2026-11-30', dias_mes: 30, dias_passados: 23, dias_restantes: 8, valor: 0, pedidos: 0, meta: null },
+    mes: {
+      inicio: '2026-11-01', fim: '2026-11-30', dias_mes: 30, dias_passados: 23, dias_restantes: 8, valor: 0, pedidos: 0, meta: null,
+      meta_dia_loja: null, meta_dia_vendedor: null, vendedores_na_meta: 0, dias_de_venda_restantes: 8, hoje_e_dia_de_venda: true,
+    },
     diario: [],
     pedidos: null,
     config: null,

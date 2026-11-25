@@ -159,6 +159,16 @@
   background: #fff;
 }
 
+.rk-meta-hoje {
+  font-size: 1em;
+  color: rgb(255 255 255 / 80%);
+  font-variant-numeric: tabular-nums;
+}
+
+.rk-meta-hoje strong {
+  color: #fff;
+}
+
 .rk-meta-rodape {
   display: flex;
   flex-wrap: wrap;

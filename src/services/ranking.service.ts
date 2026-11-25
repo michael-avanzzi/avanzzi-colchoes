@@ -72,6 +72,14 @@ export type RankingVendas = {
     valor: number
     pedidos: number
     meta: number | null
+    /** Meta de hoje da loja: (meta do mês - vendido até ontem) ÷ dias de venda que faltam. */
+    meta_dia_loja: number | null
+    /** Meta automática de hoje de cada vendedor: meta_dia_loja ÷ vendedores_na_meta. */
+    meta_dia_vendedor: number | null
+    /** Usuários com papel "vendedor" ligados ao Syscol (administradores ficam de fora). */
+    vendedores_na_meta: number
+    dias_de_venda_restantes: number
+    hoje_e_dia_de_venda: boolean
   }
   diario: { dia: string; valor: number; pedidos: number }[]
   pedidos: PedidoRanking[] | null

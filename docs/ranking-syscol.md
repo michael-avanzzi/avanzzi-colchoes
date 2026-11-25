@@ -25,7 +25,7 @@ pg_cron (a cada 2 min) ──▶ Edge Function syscol-avisos ──▶ Web Push 
 | Demais pedidos | Pelo vendedor marcado em cada item, como no Syscol |
 | Custo / margem | Custo de reposição dos itens não cancelados |
 | Meta do mês | Mapa de meta mensal do Syscol; a meta em **Configurar** só vale se o Syscol não tiver meta no mês |
-| Meta do dia | Meta própria do vendedor ou a meta diária padrão (em **Configurar**) |
+| Meta do dia | Automática: `syscol.meta_do_dia` = (meta do mês − vendido até ontem) ÷ dias de venda que faltam (lista `diasvenda` do Syscol), dividida igualmente entre os usuários com papel **vendedor** ligados ao Syscol. Administradores e gerentes ficam de fora. Meta própria em **Configurar** vale por cima; a meta diária manual só vale em mês sem meta |
 
 ## Configuração (já feita no projeto Avanzzi agendamentos)
 
