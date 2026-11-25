@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Info, MessageCircle, RefreshCw, Settings, Tv } from 'lucide-react'
+import { Info, MessageCircle, RefreshCw, Settings, Target, Tv } from 'lucide-react'
 
 import { useAuth } from '../auth/AuthProvider'
 import { AvisosRanking, CartaoAviso } from '../components/ranking/AvisosRanking'
@@ -16,6 +16,7 @@ import { linkWhatsApp } from '../lib/whatsapp'
 import {
   dataCurta,
   hojeBrasilia,
+  montarMensagemMetaDoDia,
   montarMensagemRanking,
   periodoDoPreset,
   PRESETS,
@@ -96,8 +97,21 @@ export function RankingPage() {
               target="_blank"
               rel="noopener noreferrer"
               title="Abre o WhatsApp com o ranking pronto para enviar ao grupo de vendas"
+              aria-label="Compartilhar o ranking no WhatsApp"
             >
-              <MessageCircle size={18} aria-hidden /> Compartilhar
+              <MessageCircle size={18} aria-hidden /> Ranking
+            </a>
+          )}
+          {dados && (
+            <a
+              className="botao botao-whatsapp botao-pequeno"
+              href={linkWhatsApp(null, montarMensagemMetaDoDia(dados))}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abre o WhatsApp com a meta de hoje pronta para enviar ao grupo de vendas"
+              aria-label="Compartilhar a meta de hoje no WhatsApp"
+            >
+              <Target size={18} aria-hidden /> Meta do dia
             </a>
           )}
           <Link to="/ranking/tv" className="botao botao-secundario botao-pequeno">
