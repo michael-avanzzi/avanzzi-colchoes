@@ -138,8 +138,8 @@ const MEDALHAS = ['🥇', '🥈', '🥉']
 export function montarMensagemRanking(dados: RankingVendas) {
   const { periodo, vendedores, mes } = dados
   const linhas: string[] = [
-    '🏆 *Ranking de vendas · Avanzzi*',
-    `📅 ${textoPeriodo(periodo.inicio, periodo.fim)} · atualizado às ${horaMsg.format(new Date(dados.gerado_em))}`,
+    '🏆 *RANKING DE VENDAS · AVANZZI*',
+    `${textoPeriodo(periodo.inicio, periodo.fim)} · atualizado às ${horaMsg.format(new Date(dados.gerado_em))}`,
     '',
   ]
 
@@ -158,24 +158,27 @@ export function montarMensagemRanking(dados: RankingVendas) {
   if (mes.meta && mes.meta > 0) {
     const pct = (100 * mes.valor) / mes.meta
     const falta = Math.max(0, mes.meta - mes.valor)
-    linhas.push('', `🎯 *Meta de ${nomeDoMes(mes.inicio)}:* ${moedaMsg.format(mes.valor)} de ${moedaMsg.format(mes.meta)} (${pctMsg.format(pct)}%)`)
+    linhas.push(
+      '',
+      `🎯 *META DE ${nomeDoMes(mes.inicio).toUpperCase()}*`,
+      `Vendido: ${moedaMsg.format(mes.valor)}`,
+      `Meta: ${moedaMsg.format(mes.meta)} (${pctMsg.format(pct)}% feito)`,
+    )
     if (falta === 0) {
       linhas.push('✅ Meta do mês batida!')
     } else {
-      linhas.push(`Faltam ${moedaMsg.format(falta)}`)
+      linhas.push(`Faltam: ${moedaMsg.format(falta)}`)
       if (mes.meta_dia_loja && mes.meta_dia_loja > 0) {
-        const porVendedor = mes.meta_dia_vendedor ? ` · ${moedaMsg.format(mes.meta_dia_vendedor)} por vendedor` : ''
-        linhas.push(`Meta de hoje: ${moedaMsg.format(mes.meta_dia_loja)}${porVendedor}`)
+        linhas.push('', '📌 *META DE HOJE*', `Loja: ${moedaMsg.format(mes.meta_dia_loja)}`)
+        if (mes.meta_dia_vendedor) linhas.push(`Cada vendedor: ${moedaMsg.format(mes.meta_dia_vendedor)}`)
       }
     }
   }
 
   const bateram = vendedores.filter((v) => bateuMetaDoDia(v))
   if (bateram.length > 0) {
-    linhas.push(
-      '',
-      `🔥 *Bateram a meta de hoje:* ${bateram.map((v) => `${primeiroNome(v.nome)} (${moedaMsg.format(v.hoje_valor)})`).join(', ')}`,
-    )
+    linhas.push('', '🔥 *BATERAM A META DE HOJE*')
+    for (const v of bateram) linhas.push(`✅ ${primeiroNome(v.nome)} · ${moedaMsg.format(v.hoje_valor)}`)
   }
 
   linhas.push('', '_Enviado pelo Avanzzi Mobile_')
@@ -185,52 +188,57 @@ export function montarMensagemRanking(dados: RankingVendas) {
 const diaMsg = new Intl.DateTimeFormat('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit', timeZone: 'UTC' })
 
 /**
- * Mensagem só da meta de hoje para o grupo de vendas: a loja contra a meta do
- * dia e cada vendedor com meta contra a dele (quem bateu primeiro).
+ * Mensagem só da meta de hoje para o grupo de vendas, em blocos curtos (cada
+ * informação numa linha, para ler bem no celular): a loja contra a meta do dia
+ * e cada vendedor com meta contra a dele, quem bateu primeiro.
  * Usa as vendas de hoje, qualquer que seja o período escolhido na tela.
  */
 export function montarMensagemMetaDoDia(dados: RankingVendas) {
   const { mes, vendedores } = dados
   const dia = diaMsg.format(new Date(`${dados.hoje}T12:00:00Z`))
   const linhas: string[] = [
-    '🎯 *Meta de hoje · Avanzzi*',
-    `📅 ${dia.charAt(0).toUpperCase()}${dia.slice(1)} · atualizado às ${horaMsg.format(new Date(dados.gerado_em))}`,
-    '',
+    '🎯 *META DE HOJE · AVANZZI*',
+    `${dia.charAt(0).toUpperCase()}${dia.slice(1)} · ${horaMsg.format(new Date(dados.gerado_em))}`,
   ]
 
+  // Loja
   const vendidoHoje = vendedores.reduce((s, v) => s + v.hoje_valor, 0)
-  const comMeta = vendedores
-    .filter((v) => v.meta_diaria !== null && v.meta_diaria > 0)
-    .map((v) => ({ v, pct: (100 * v.hoje_valor) / (v.meta_diaria as number) }))
-    .sort((a, b) => b.pct - a.pct || b.v.hoje_valor - a.v.hoje_valor)
-
+  linhas.push('', '🏬 *LOJA*', `Vendido: ${moedaMsg.format(vendidoHoje)}`)
   if (mes.meta_dia_loja && mes.meta_dia_loja > 0) {
     const pct = (100 * vendidoHoje) / mes.meta_dia_loja
-    const status = vendidoHoje >= mes.meta_dia_loja ? '✅' : '🏬'
-    linhas.push(
-      `${status} *Loja:* ${moedaMsg.format(vendidoHoje)} de ${moedaMsg.format(mes.meta_dia_loja)} (${pctMsg.format(pct)}%)`,
-    )
-    if (vendidoHoje < mes.meta_dia_loja) linhas.push(`Faltam ${moedaMsg.format(mes.meta_dia_loja - vendidoHoje)} para a meta da loja hoje`)
-  } else {
-    linhas.push(`🏬 *Loja hoje:* ${moedaMsg.format(vendidoHoje)}`)
+    linhas.push(`Meta: ${moedaMsg.format(mes.meta_dia_loja)}`)
+    if (vendidoHoje >= mes.meta_dia_loja) linhas.push(`✅ Meta da loja batida! (${pctMsg.format(pct)}%)`)
+    else linhas.push(`Faltam: ${moedaMsg.format(mes.meta_dia_loja - vendidoHoje)} (${pctMsg.format(pct)}% feito)`)
   }
+
+  // Vendedores (só quem tem meta: administradores e gerentes ficam de fora)
+  const comMeta = vendedores
+    .filter((v) => v.meta_diaria !== null && v.meta_diaria > 0)
+    .map((v) => ({ v, meta: v.meta_diaria as number, pct: (100 * v.hoje_valor) / (v.meta_diaria as number) }))
+    .sort((a, b) => b.pct - a.pct || b.v.hoje_valor - a.v.hoje_valor)
 
   if (comMeta.length === 0) {
     linhas.push('', 'Hoje não há meta do dia definida para os vendedores.')
   } else {
-    linhas.push('', '*Vendedores*')
-    for (const { v, pct } of comMeta) {
-      const meta = v.meta_diaria as number
-      if (v.hoje_valor >= meta) {
-        linhas.push(`✅ *${primeiroNome(v.nome)}* · ${moedaMsg.format(v.hoje_valor)} de ${moedaMsg.format(meta)} (${pctMsg.format(pct)}%)`)
-      } else {
-        linhas.push(
-          `⏳ ${primeiroNome(v.nome)} · ${moedaMsg.format(v.hoje_valor)} de ${moedaMsg.format(meta)} · faltam ${moedaMsg.format(meta - v.hoje_valor)}`,
-        )
-      }
+    const metaUnica = comMeta.every((x) => x.meta === comMeta[0].meta) ? comMeta[0].meta : null
+    linhas.push('', metaUnica ? `👥 *VENDEDORES* · meta de ${moedaMsg.format(metaUnica)} cada` : '👥 *VENDEDORES*')
+    for (const { v, meta } of comMeta) {
+      const bateu = v.hoje_valor >= meta
+      const deMeta = metaUnica ? '' : ` de ${moedaMsg.format(meta)}`
+      linhas.push('', `${bateu ? '✅' : '⏳'} *${primeiroNome(v.nome)}*`)
+      linhas.push(
+        bateu
+          ? `Vendeu ${moedaMsg.format(v.hoje_valor)}${deMeta} · meta batida! 🎉`
+          : `Vendeu ${moedaMsg.format(v.hoje_valor)}${deMeta} · faltam ${moedaMsg.format(meta - v.hoje_valor)}`,
+      )
     }
-    const bateram = comMeta.filter(({ v }) => v.hoje_valor >= (v.meta_diaria as number)).length
-    linhas.push('', bateram === comMeta.length ? '🔥 Todo mundo bateu a meta de hoje!' : `${bateram} de ${comMeta.length} já bateram a meta. Bora! 💪`)
+    const bateram = comMeta.filter((x) => x.v.hoje_valor >= x.meta).length
+    linhas.push(
+      '',
+      bateram === comMeta.length
+        ? '🔥 Todo mundo bateu a meta de hoje!'
+        : `📊 ${bateram} de ${comMeta.length} já ${bateram === 1 ? 'bateu' : 'bateram'} a meta. Bora! 💪`,
+    )
   }
 
   linhas.push('', '_Enviado pelo Avanzzi Mobile_')

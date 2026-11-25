@@ -517,6 +517,12 @@
   gap: 10px;
 }
 
+.rk-fora-meta {
+  flex: 1 1 140px;
+  align-self: center;
+  font-size: 0.85rem;
+}
+
 .campo-compacto {
   flex: 1 1 140px;
 }

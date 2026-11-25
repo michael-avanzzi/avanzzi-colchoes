@@ -154,48 +154,62 @@ describe('montarMensagemRanking', () => {
     ])
     dados.mes = { ...dados.mes, valor: 482037, meta: 600000, meta_dia_loja: 19661, meta_dia_vendedor: 4916, vendedores_na_meta: 4 }
     const msg = montarMensagemRanking(dados)
-    expect(msg).toContain('🏆 *Ranking de vendas · Avanzzi*')
+    expect(msg).toContain('🏆 *RANKING DE VENDAS · AVANZZI*')
     expect(msg).toContain('🥇 *Dyonathan* · R$')
     expect(msg).toContain('148.584 (51 pedidos)')
     expect(msg).toContain('🥉 *Davi*')
     expect(msg).toContain('(1 pedido)')
     expect(msg).toContain('4º Lara · R$')
-    expect(msg).toContain('*Meta de novembro:*')
-    expect(msg).toContain('(80,3%)')
-    expect(msg).toContain('Meta de hoje: R$')
-    expect(msg).toContain('*Bateram a meta de hoje:* Dyonathan')
+    expect(msg).toContain('🎯 *META DE NOVEMBRO*')
+    expect(msg).toContain('(80,3% feito)')
+    expect(msg).toContain('📌 *META DE HOJE*\nLoja: R$')
+    expect(msg).toContain('Cada vendedor: R$')
+    expect(msg).toContain('🔥 *BATERAM A META DE HOJE*\n✅ Dyonathan · R$')
+    for (const l of msg.split('\n')) expect(l.length).toBeLessThanOrEqual(48)
     expect(msg).not.toMatch(/margem|44/i)
   })
 
   it('sem vendas e sem meta', () => {
     const msg = montarMensagemRanking(ranking([vendedor({ valor: 0 })]))
     expect(msg).toContain('Nenhuma venda no período ainda.')
-    expect(msg).not.toContain('Meta de')
+    expect(msg).not.toContain('META DE')
   })
 })
 
 describe('montarMensagemMetaDoDia', () => {
-  it('mostra a loja e cada vendedor com meta, quem bateu primeiro; administrador sem meta fica de fora', () => {
+  it('blocos curtos: loja, depois cada vendedor com meta (quem bateu primeiro); administrador sem meta fica de fora', () => {
     const dados = ranking([
-      vendedor({ posicao: 1, vendedor_id: '3', nome: 'Dyonathan Henrique', valor: 1, hoje_valor: 2100, meta_diaria: 4916 }),
-      vendedor({ posicao: 2, vendedor_id: '5', nome: 'Anderson Carneiro', valor: 1, hoje_valor: 6200, meta_diaria: 4916 }),
-      vendedor({ posicao: 3, vendedor_id: '6', nome: 'Davi Valentini', valor: 1, hoje_valor: 0, meta_diaria: 4916 }),
+      vendedor({ posicao: 1, vendedor_id: '3', nome: 'Dyonathan Henrique', valor: 1, hoje_valor: 1750, meta_diaria: 4560 }),
+      vendedor({ posicao: 2, vendedor_id: '5', nome: 'Anderson Carneiro', valor: 1, hoje_valor: 6200, meta_diaria: 4560 }),
+      vendedor({ posicao: 3, vendedor_id: '6', nome: 'Davi Valentini', valor: 1, hoje_valor: 0, meta_diaria: 4560 }),
       vendedor({ posicao: 4, vendedor_id: '4', nome: 'Matheus Avanzzi', valor: 1, hoje_valor: 900, meta_diaria: null }),
     ])
-    dados.mes = { ...dados.mes, meta: 600000, meta_dia_loja: 19661, meta_dia_vendedor: 4916, vendedores_na_meta: 3 }
+    dados.mes = { ...dados.mes, meta: 600000, meta_dia_loja: 18238, meta_dia_vendedor: 4560, vendedores_na_meta: 3 }
     const msg = montarMensagemMetaDoDia(dados)
-    expect(msg).toContain('🎯 *Meta de hoje · Avanzzi*')
-    expect(msg).toContain('Segunda-feira, 23/11')
-    expect(msg).toContain('*Loja:* R$')
-    expect(msg).toContain('9.200 de R$')
-    expect(msg).toContain('19.661 (46,8%)')
-    const anderson = msg.indexOf('✅ *Anderson*')
-    const dyonathan = msg.indexOf('⏳ Dyonathan')
-    expect(anderson).toBeGreaterThan(-1)
-    expect(dyonathan).toBeGreaterThan(anderson)
-    expect(msg).toContain('faltam R$')
+    const linhas = msg.split('\n')
+    expect(linhas[0]).toBe('🎯 *META DE HOJE · AVANZZI*')
+    expect(linhas[1]).toMatch(/^Segunda-feira, 23\/11 · /)
+    expect(msg).toContain('🏬 *LOJA*\nVendido: R$')
+    expect(msg).toContain('8.850\nMeta: R$')
+    expect(msg).toMatch(/Faltam: R\$\s9\.388 \(48,5% feito\)/)
+    expect(msg).toMatch(/👥 \*VENDEDORES\* · meta de R\$\s4\.560 cada/)
+    expect(msg).toMatch(/✅ \*Anderson\*\nVendeu R\$\s6\.200 · meta batida! 🎉/)
+    expect(msg).toMatch(/⏳ \*Dyonathan\*\nVendeu R\$\s1\.750 · faltam R\$\s2\.810/)
+    expect(msg.indexOf('Anderson')).toBeLessThan(msg.indexOf('Dyonathan'))
     expect(msg).not.toContain('Matheus')
-    expect(msg).toContain('1 de 3 já bateram a meta')
+    expect(msg).toContain('📊 1 de 3 já bateu a meta. Bora! 💪')
+    // nenhuma linha longa (lê bem no celular)
+    for (const l of linhas) expect(l.length).toBeLessThanOrEqual(48)
+  })
+
+  it('meta própria diferente aparece na linha do vendedor', () => {
+    const dados = ranking([
+      vendedor({ vendedor_id: '3', nome: 'Ana', valor: 1, hoje_valor: 1000, meta_diaria: 4560 }),
+      vendedor({ posicao: 2, vendedor_id: '5', nome: 'Bia', valor: 1, hoje_valor: 0, meta_diaria: 6000 }),
+    ])
+    const msg = montarMensagemMetaDoDia(dados)
+    expect(msg).toContain('👥 *VENDEDORES*\n')
+    expect(msg).toMatch(/Vendeu R\$\s0 de R\$\s6\.000 · faltam/)
   })
 
   it('sem meta do dia', () => {

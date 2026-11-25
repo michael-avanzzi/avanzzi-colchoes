@@ -77,14 +77,23 @@ export function ConfigRanking({ aberto, onFechar, dados, ehAdmin, onSalvo, onTes
               <li key={vs.id} className="rk-config-item">
                 <strong>{vs.nome}</strong>
                 <div className="rk-config-controles">
-                  {vs.ativo && (
+                  {vs.ativo && perfil && perfil.papel !== 'vendedor' && (
+                    <span className="texto-suave rk-fora-meta">Fora da meta do dia ({perfil.papel === 'admin' ? 'administrador' : 'gerente'})</span>
+                  )}
+                  {vs.ativo && (!perfil || perfil.papel === 'vendedor') && (
                     <label className="campo campo-compacto">
-                      <span>Meta diária</span>
+                      <span>Meta diária própria</span>
                       <input
                         inputMode="decimal"
                         defaultValue={v?.meta_propria && v.meta_diaria ? String(v.meta_diaria) : ''}
                         placeholder={v?.meta_diaria && !v.meta_propria ? `Automática ${Math.round(v.meta_diaria)}` : 'Automática'}
+                        onChange={(e) => {
+                          e.currentTarget.dataset.alterado = '1'
+                        }}
                         onBlur={(e) => {
+                          // Só salva o que a pessoa digitou (evita regravar valores antigos ao fechar a janela).
+                          if (e.currentTarget.dataset.alterado !== '1') return
+                          delete e.currentTarget.dataset.alterado
                           const novo = numeroOuNull(e.target.value)
                           const atual = v?.meta_propria ? v.meta_diaria : null
                           if (novo !== atual) void executar(() => salvarMetaVendedor(vs.id, novo), `Meta de ${vs.nome} salva.`)

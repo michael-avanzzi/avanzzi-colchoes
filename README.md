@@ -38,6 +38,7 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261124_10_venda_dividida.sql` | Pedido com dois vendedores repartido pelo percentual de cada um (decisão da gestão) |
 | `20261125_11_trocas.sql` | Trocas: o crédito dos itens devolvidos não conta como venda nova; o pedido de troca vale só a diferença paga |
 | `20261125_12_meta_diaria_automatica.sql` | Meta diária automática: meta do dia da loja dividida entre os vendedores (administradores fora) |
+| `20261125_13_meta_so_vendedores.sql` | Administradores e gerentes sem meta do dia, nem própria |
 
 ## Testes
 
