@@ -58,6 +58,13 @@
   color: var(--atencao-texto);
 }
 
+.rk-troca {
+  display: block;
+  color: var(--atencao-texto);
+  font-weight: 600;
+  white-space: normal;
+}
+
 .rk-cancelado td,
 .rk-cancelado th {
   color: var(--texto-suave);

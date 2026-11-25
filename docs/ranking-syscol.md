@@ -20,6 +20,7 @@ pg_cron (a cada 2 min) ──▶ Edge Function syscol-avisos ──▶ Web Push 
 |---|---|
 | Período | Data de emissão do pedido, no horário de Brasília |
 | Cancelados | Fora de todos os totais (status 2 da API ou data de cancelamento) |
+| Trocas | Pedido com `pedidocomtroca` conta `valortotal − valordevolucao` (nunca negativo): o crédito dos itens devolvidos não vira venda nova. O pedido original continua contando. O custo cai na mesma proporção. Campos: `syscol.pedidos.valor_venda` / `custo_venda` (o `total` guarda o valor do Syscol) |
 | Venda dividida | Pedido com vendedor secundário é repartido pelo percentual de venda de cada um (50/50 se não houver). Decisão da gestão: aqui o ranking difere do relatório do Syscol, que credita o pedido inteiro ao vendedor dos itens |
 | Demais pedidos | Pelo vendedor marcado em cada item, como no Syscol |
 | Custo / margem | Custo de reposição dos itens não cancelados |

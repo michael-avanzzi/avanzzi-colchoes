@@ -36,6 +36,7 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261123_08_vendas_syscol.sql` | Vendas do Syscol (schema `syscol`), `rpc_ranking_vendas`, metas e avisos do Ranking |
 | `20261124_09_vendas_por_item.sql` | Venda de cada vendedor pelo vendedor dos itens, igual ao Syscol |
 | `20261124_10_venda_dividida.sql` | Pedido com dois vendedores repartido pelo percentual de cada um (decisão da gestão) |
+| `20261125_11_trocas.sql` | Trocas: o crédito dos itens devolvidos não conta como venda nova; o pedido de troca vale só a diferença paga |
 
 ## Testes
 

@@ -24,7 +24,13 @@ export type PedidoRanking = {
   data_emissao: string
   status: string | null
   cancelado: boolean
+  /** Valor que conta como venda (total do pedido menos o crédito de troca). */
   total: number
+  /** Total do pedido no Syscol. */
+  total_pedido: number
+  troca: boolean
+  /** Crédito de itens devolvidos usado no pedido (troca). */
+  valor_devolucao: number
   qtd_itens: number | null
   vendedor: string | null
   vendedor_2: string | null

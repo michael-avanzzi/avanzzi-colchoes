@@ -21,7 +21,9 @@ const TABELAS: Record<string, string[]> = {
   pedidos: ["id", "pedidonumero", "criadoem", "registradoem", "alteradoem", "valortotal", "valorprodutos", "desconto", "frete",
     "status", "statusentrega", "vendedorprincipal", "vendedorsecundario", "principalpercvenda", "secundariopercvenda",
     "canceladoem", "canceladomotivo", "valortotalcancelado", "concluidoem", "empresaid", "clienteid", "orcamentoid", "leeadid",
-    "cep", "bairro", "cidade", "estado", "sys_alteradoem"],
+    "cep", "bairro", "cidade", "estado", "sys_alteradoem",
+    // Trocas: crédito de itens devolvidos usado no pedido (não conta como venda nova).
+    "pedidocomtroca", "valordevolucao", "vinculodevolucao", "creditogeradovalor"],
   pedidos_itens: ["id", "pedidoid", "produtoid", "item", "quantidade", "descricao", "valorunitario", "valorunitariocheio",
     "customedio", "custoreposicao", "custofinanc", "lucromedio", "lucroreposicao", "vendedorid", "canceladoem", "data",
     "brinde", "servico", "empresaid", "largura", "comprimento", "altura"],

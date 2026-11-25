@@ -266,7 +266,14 @@ export function RankingPage() {
                             <span className={`etiqueta ${classeStatus(p)}`}>{p.status ?? '—'}</span>
                           </td>
                           <td className="num">{p.qtd_itens ?? '—'}</td>
-                          <td className="num">{formatarMoeda(p.total)}</td>
+                          <td className="num">
+                            {formatarMoeda(p.total)}
+                            {p.valor_devolucao > 0 && (
+                              <small className="rk-troca">
+                                Troca: pedido de {formatarMoeda(p.total_pedido)} com {formatarMoeda(p.valor_devolucao)} de crédito
+                              </small>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -284,6 +291,7 @@ export function RankingPage() {
               <li>Os pedidos vêm do Syscol: pelo webhook, na hora em que são gravados, e por uma sincronização com a API a cada 10 minutos, que traz cancelamentos e alterações.</li>
               <li>O período usa a <strong>data de emissão</strong> do pedido. "Hoje" e "este mês" seguem o horário de Brasília.</li>
               <li>Pedidos cancelados ficam fora de todos os totais.</li>
+              <li><strong>Trocas</strong>: quando o cliente troca o produto, o crédito dos itens devolvidos não conta de novo como venda. O pedido de troca conta só a diferença que o cliente pagou (e nada, se o crédito cobriu tudo). A venda original continua contando.</li>
               <li><strong>Venda dividida</strong>: pedido com dois vendedores é repartido pelo percentual de cada um no Syscol (por isso o valor de cada vendedor pode diferir do relatório do Syscol, que credita o pedido inteiro a um só).</li>
               <li>Os demais pedidos contam para o vendedor marcado nos itens, como no Syscol.</li>
               <li><strong>Meta do mês</strong> vem do mapa de meta mensal do Syscol. A marca na barra mostra onde a loja deveria estar hoje vendendo o mesmo valor todo dia.</li>
