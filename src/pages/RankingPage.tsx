@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Info, RefreshCw, Settings, Tv } from 'lucide-react'
+import { Info, MessageCircle, RefreshCw, Settings, Tv } from 'lucide-react'
 
 import { useAuth } from '../auth/AuthProvider'
 import { AvisosRanking, CartaoAviso } from '../components/ranking/AvisosRanking'
@@ -12,9 +12,11 @@ import { ListaRanking, Podio } from '../components/ranking/Placar'
 import { useRankingVendas } from '../hooks/useRankingVendas'
 import { useSom } from '../hooks/useSom'
 import { formatarMoeda } from '../lib/datas'
+import { linkWhatsApp } from '../lib/whatsapp'
 import {
   dataCurta,
   hojeBrasilia,
+  montarMensagemRanking,
   periodoDoPreset,
   PRESETS,
   textoPeriodo,
@@ -87,6 +89,17 @@ export function RankingPage() {
           <button type="button" className="botao-icone escuro" onClick={() => void atualizar()} aria-label="Atualizar agora" title="Atualizar agora">
             <RefreshCw size={18} className={carregando ? 'rk-girando' : ''} />
           </button>
+          {dados && (
+            <a
+              className="botao botao-whatsapp botao-pequeno"
+              href={linkWhatsApp(null, montarMensagemRanking(dados))}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abre o WhatsApp com o ranking pronto para enviar ao grupo de vendas"
+            >
+              <MessageCircle size={18} aria-hidden /> Compartilhar
+            </a>
+          )}
           <Link to="/ranking/tv" className="botao botao-secundario botao-pequeno">
             <Tv size={18} aria-hidden /> Modo TV
           </Link>

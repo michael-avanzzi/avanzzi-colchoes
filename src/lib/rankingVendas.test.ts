@@ -5,6 +5,7 @@ import {
   calcularMetaLoja,
   detectarAvisos,
   hojeBrasilia,
+  montarMensagemRanking,
   periodoDoPreset,
   textoPeriodo,
   variacao,
@@ -139,5 +140,35 @@ describe('textoPeriodo', () => {
   it('mostra um dia ou um intervalo', () => {
     expect(textoPeriodo('2026-11-23', '2026-11-23')).toBe('23 nov')
     expect(textoPeriodo('2026-11-01', '2026-11-23')).toBe('1 nov a 23 nov')
+  })
+})
+
+describe('montarMensagemRanking', () => {
+  it('lista o ranking, a meta e quem bateu a meta do dia, sem margem', () => {
+    const dados = ranking([
+      vendedor({ posicao: 1, vendedor_id: '3', nome: 'Dyonathan Henrique', valor: 148583.59, pedidos: 51, hoje_valor: 6200, meta_diaria: 4916, margem_pct: 44 }),
+      vendedor({ posicao: 2, vendedor_id: '5', nome: 'Anderson Carneiro', valor: 108479.8, pedidos: 36, meta_diaria: 4916 }),
+      vendedor({ posicao: 3, vendedor_id: '6', nome: 'Davi Valentini', valor: 74081.3, pedidos: 1 }),
+      vendedor({ posicao: 4, vendedor_id: '2', nome: 'Lara Gabriele', valor: 68164.8, pedidos: 24 }),
+    ])
+    dados.mes = { ...dados.mes, valor: 482037, meta: 600000, meta_dia_loja: 19661, meta_dia_vendedor: 4916, vendedores_na_meta: 4 }
+    const msg = montarMensagemRanking(dados)
+    expect(msg).toContain('🏆 *Ranking de vendas · Avanzzi*')
+    expect(msg).toContain('🥇 *Dyonathan* · R$')
+    expect(msg).toContain('148.584 (51 pedidos)')
+    expect(msg).toContain('🥉 *Davi*')
+    expect(msg).toContain('(1 pedido)')
+    expect(msg).toContain('4º Lara · R$')
+    expect(msg).toContain('*Meta de novembro:*')
+    expect(msg).toContain('(80,3%)')
+    expect(msg).toContain('Meta de hoje: R$')
+    expect(msg).toContain('*Bateram a meta de hoje:* Dyonathan')
+    expect(msg).not.toMatch(/margem|44/i)
+  })
+
+  it('sem vendas e sem meta', () => {
+    const msg = montarMensagemRanking(ranking([vendedor({ valor: 0 })]))
+    expect(msg).toContain('Nenhuma venda no período ainda.')
+    expect(msg).not.toContain('Meta de')
   })
 })

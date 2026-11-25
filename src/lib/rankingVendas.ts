@@ -125,3 +125,59 @@ export function textoPeriodo(inicio: string, fim: string) {
   if (inicio === fim) return dataCurta(inicio)
   return `${dataCurta(inicio)} a ${dataCurta(fim)}`
 }
+
+const moedaMsg = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
+const pctMsg = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+const horaMsg = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' })
+const MEDALHAS = ['🥇', '🥈', '🥉']
+
+/**
+ * Mensagem do ranking atual para o grupo de vendas no WhatsApp
+ * (*negrito* e _itálico_ no formato do WhatsApp). Não inclui margem nem custo.
+ */
+export function montarMensagemRanking(dados: RankingVendas) {
+  const { periodo, vendedores, mes } = dados
+  const linhas: string[] = [
+    '🏆 *Ranking de vendas · Avanzzi*',
+    `📅 ${textoPeriodo(periodo.inicio, periodo.fim)} · atualizado às ${horaMsg.format(new Date(dados.gerado_em))}`,
+    '',
+  ]
+
+  const comVenda = vendedores.filter((v) => v.valor > 0)
+  if (comVenda.length === 0) {
+    linhas.push('Nenhuma venda no período ainda.')
+  } else {
+    for (const v of vendedores) {
+      const posicao = MEDALHAS[v.posicao - 1] ?? `${v.posicao}º`
+      const pedidos = v.pedidos === 1 ? '1 pedido' : `${v.pedidos} pedidos`
+      const texto = `${posicao} ${v.posicao <= 3 ? `*${primeiroNome(v.nome)}*` : primeiroNome(v.nome)} · ${moedaMsg.format(v.valor)} (${pedidos})`
+      linhas.push(texto)
+    }
+  }
+
+  if (mes.meta && mes.meta > 0) {
+    const pct = (100 * mes.valor) / mes.meta
+    const falta = Math.max(0, mes.meta - mes.valor)
+    linhas.push('', `🎯 *Meta de ${nomeDoMes(mes.inicio)}:* ${moedaMsg.format(mes.valor)} de ${moedaMsg.format(mes.meta)} (${pctMsg.format(pct)}%)`)
+    if (falta === 0) {
+      linhas.push('✅ Meta do mês batida!')
+    } else {
+      linhas.push(`Faltam ${moedaMsg.format(falta)}`)
+      if (mes.meta_dia_loja && mes.meta_dia_loja > 0) {
+        const porVendedor = mes.meta_dia_vendedor ? ` · ${moedaMsg.format(mes.meta_dia_vendedor)} por vendedor` : ''
+        linhas.push(`Meta de hoje: ${moedaMsg.format(mes.meta_dia_loja)}${porVendedor}`)
+      }
+    }
+  }
+
+  const bateram = vendedores.filter((v) => bateuMetaDoDia(v))
+  if (bateram.length > 0) {
+    linhas.push(
+      '',
+      `🔥 *Bateram a meta de hoje:* ${bateram.map((v) => `${primeiroNome(v.nome)} (${moedaMsg.format(v.hoje_valor)})`).join(', ')}`,
+    )
+  }
+
+  linhas.push('', '_Enviado pelo Avanzzi Mobile_')
+  return linhas.join('\n')
+}
