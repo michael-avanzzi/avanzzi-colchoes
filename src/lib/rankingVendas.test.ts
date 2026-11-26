@@ -164,9 +164,23 @@ describe('montarMensagemRanking', () => {
     expect(msg).toContain('(80,3% feito)')
     expect(msg).toContain('📌 *META DE HOJE*\nLoja: R$')
     expect(msg).toContain('Cada vendedor: R$')
-    expect(msg).toContain('🔥 *BATERAM A META DE HOJE*\n✅ Dyonathan · R$')
+    expect(msg).toMatch(/💰 \*VENDAS DE HOJE\*\nLoja: R\$\s6\.200\n✅ Dyonathan · R\$\s6\.200/)
+    expect(msg).toContain('✅ = bateu a meta do dia')
     for (const l of msg.split('\n')) expect(l.length).toBeLessThanOrEqual(48)
     expect(msg).not.toMatch(/margem|44/i)
+  })
+
+  it('vendas de hoje incluem quem não tem meta (administrador)', () => {
+    const msg = montarMensagemRanking(
+      ranking([
+        vendedor({ posicao: 1, vendedor_id: '3', nome: 'Dyonathan Henrique', valor: 5000, hoje_valor: 1750, meta_diaria: 4560 }),
+        vendedor({ posicao: 2, vendedor_id: '7', nome: 'Michael Avanzzi', valor: 3200, hoje_valor: 3200, meta_diaria: null }),
+        vendedor({ posicao: 3, vendedor_id: '6', nome: 'Davi Valentini', valor: 100, hoje_valor: 0, meta_diaria: 4560 }),
+      ]),
+    )
+    expect(msg).toMatch(/💰 \*VENDAS DE HOJE\*\nLoja: R\$\s4\.950\n• Michael · R\$\s3\.200\n• Dyonathan · R\$\s1\.750/)
+    expect(msg).not.toContain('• Davi')
+    expect(msg).not.toContain('bateu a meta do dia')
   })
 
   it('sem vendas e sem meta', () => {
@@ -196,8 +210,10 @@ describe('montarMensagemMetaDoDia', () => {
     expect(msg).toMatch(/✅ \*Anderson\*\nVendeu R\$\s6\.200 · meta batida! 🎉/)
     expect(msg).toMatch(/⏳ \*Dyonathan\*\nVendeu R\$\s1\.750 · faltam R\$\s2\.810/)
     expect(msg.indexOf('Anderson')).toBeLessThan(msg.indexOf('Dyonathan'))
-    expect(msg).not.toContain('Matheus')
     expect(msg).toContain('📊 1 de 3 já bateu a meta. Bora! 💪')
+    // Administrador sem meta não entra na lista de metas, mas a venda dele aparece.
+    expect(msg).not.toMatch(/\*Matheus\*/)
+    expect(msg).toMatch(/💼 \*OUTRAS VENDAS DE HOJE\*\nMatheus · R\$\s900/)
     // nenhuma linha longa (lê bem no celular)
     for (const l of linhas) expect(l.length).toBeLessThanOrEqual(48)
   })

@@ -175,10 +175,15 @@ export function montarMensagemRanking(dados: RankingVendas) {
     }
   }
 
-  const bateram = vendedores.filter((v) => bateuMetaDoDia(v))
-  if (bateram.length > 0) {
-    linhas.push('', '🔥 *BATERAM A META DE HOJE*')
-    for (const v of bateram) linhas.push(`✅ ${primeiroNome(v.nome)} · ${moedaMsg.format(v.hoje_valor)}`)
+  // Vendas de hoje: todo mundo que vendeu hoje (administradores também), ✅ em quem bateu a meta.
+  const venderamHoje = vendedores.filter((v) => v.hoje_valor > 0).sort((a, b) => b.hoje_valor - a.hoje_valor)
+  if (venderamHoje.length > 0) {
+    const totalHoje = venderamHoje.reduce((s, v) => s + v.hoje_valor, 0)
+    linhas.push('', '💰 *VENDAS DE HOJE*', `Loja: ${moedaMsg.format(totalHoje)}`)
+    for (const v of venderamHoje) {
+      linhas.push(`${bateuMetaDoDia(v) ? '✅' : '•'} ${primeiroNome(v.nome)} · ${moedaMsg.format(v.hoje_valor)}`)
+    }
+    if (venderamHoje.some((v) => bateuMetaDoDia(v))) linhas.push('✅ = bateu a meta do dia')
   }
 
   linhas.push('', '_Enviado pelo Avanzzi Mobile_')
@@ -239,6 +244,15 @@ export function montarMensagemMetaDoDia(dados: RankingVendas) {
         ? '🔥 Todo mundo bateu a meta de hoje!'
         : `📊 ${bateram} de ${comMeta.length} já ${bateram === 1 ? 'bateu' : 'bateram'} a meta. Bora! 💪`,
     )
+  }
+
+  // Quem vendeu hoje sem ter meta (administradores e gerentes): aparece, sem meta.
+  const semMeta = vendedores
+    .filter((v) => !(v.meta_diaria !== null && v.meta_diaria > 0) && v.hoje_valor > 0)
+    .sort((a, b) => b.hoje_valor - a.hoje_valor)
+  if (semMeta.length > 0) {
+    linhas.push('', '💼 *OUTRAS VENDAS DE HOJE*')
+    for (const v of semMeta) linhas.push(`${primeiroNome(v.nome)} · ${moedaMsg.format(v.hoje_valor)}`)
   }
 
   linhas.push('', '_Enviado pelo Avanzzi Mobile_')
