@@ -34,8 +34,15 @@ export function ProtectedRoute({ children, papeis }: Props) {
   }
 
   if (papeis && !papeis.includes(perfil.papel)) {
-    return <Navigate to="/" replace />
+    return <Navigate to={telaInicial(perfil.papel)} replace />
   }
 
   return children
+}
+
+/** Tela inicial de cada papel (para onde vai quem abre uma tela que não pode ver). */
+function telaInicial(papel: Papel) {
+  if (papel === 'logistica') return '/entregas'
+  if (papel === 'tv') return '/ranking/tv'
+  return '/'
 }

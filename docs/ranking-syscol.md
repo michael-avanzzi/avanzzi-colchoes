@@ -56,3 +56,14 @@ from syscol.webhook_eventos order by id desc limit 10;
 -- Avisos enviados
 select chave, tipo, dados, criado_em from syscol.avisos_enviados order by criado_em desc limit 10;
 ```
+
+## Entregas (semana de entregas)
+
+Tela **Entregas** (`/entregas`): vendedor vê só os pedidos dele; Logística, gerente e administrador veem todos (com filtro por vendedor).
+
+- **Data da entrega:** data da minuta; sem minuta, a data prometida do pedido (`promessa_data1`), marcada como "Sem minuta · data prometida".
+- **Atrasadas:** todas as entregas de semanas anteriores ainda não concluídas, numa seção vermelha no topo.
+- **Selo do pedido:** verde = pronto/entregue; azul = aguarda fabricante, mas o depósito tem saldo livre para tudo (dá para adiantar); amarelo = aguardando fabricante; vermelho = risco de atraso (previsão do fabricante depois da entrega ou sem previsão).
+- **Estoque do item:** "Em estoque" / "Na carga" / "Entregue"; "Tem no estoque (N livre)" = saldo do depósito menos reservado (o saldo livre é por produto e compartilhado entre pedidos); "Sem estoque · fábrica dd/mm" ou "sem pedido de compra".
+- Situação dos itens (`pedidos_itens.entrega`) inferida: 1 disponível, 2 aguardando fabricar, 7 brinde, 16 em carga. **Confirmar com a Fábrica de Sistemas.**
+- Tabelas da API usadas: minuta, cargas, estoque_posicao, pedidocompra, pedidocompra_itens, clientes (sincronizadas pelo `syscol-sync`).

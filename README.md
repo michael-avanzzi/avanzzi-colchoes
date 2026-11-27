@@ -1,6 +1,6 @@
 # Avanzzi Mobile
 
-App da equipe Avanzzi Colchões: Meu dia (atendimentos do dia com o próximo passo em um toque), agenda (calendário com dia, semana e mês), histórico auditável, painel de comparecimento e conversão e ranking de vendas com os pedidos do Syscol. Substitui o controle feito antes no Trello.
+App da equipe Avanzzi Colchões: Meu dia (atendimentos do dia com o próximo passo em um toque), agenda (calendário com dia, semana e mês), histórico auditável, painel de comparecimento e conversão ranking de vendas com os pedidos do Syscol e a semana de entregas (logística). Substitui o controle feito antes no Trello.
 
 ## Stack
 
@@ -39,10 +39,13 @@ As migrações ficam em `supabase/migrations`, em ordem de nome:
 | `20261125_11_trocas.sql` | Trocas: o crédito dos itens devolvidos não conta como venda nova; o pedido de troca vale só a diferença paga |
 | `20261125_12_meta_diaria_automatica.sql` | Meta diária automática: meta do dia da loja dividida entre os vendedores (administradores fora) |
 | `20261125_13_meta_so_vendedores.sql` | Administradores e gerentes sem meta do dia, nem própria |
+| `20261127_14_papel_logistica.sql` | Papel Logística |
+| `20261127_15_entregas.sql` | Semana de entregas: data da minuta (ou a prometida), cliente, endereço, carga e itens; vendedor vê só as suas |
+| `20261127_16_entregas_estoque.sql` | Estoque por item (saldo livre no depósito) e todas as entregas atrasadas |
 
 ## Testes
 
-- **Front (Vitest):** `npm test` cobre as regras de etapa, os botões do Meu dia, as permissões exibidas, as datas e o ranking.
+- **Front (Vitest):** `npm test` cobre as regras de etapa, os botões do Meu dia, as permissões exibidas, as datas, o ranking e as entregas.
 - **Banco:** cole `supabase/testes/regras_agendamento.sql` no SQL Editor e rode. São 32 verificações: criação, conflito, edição simultânea, histórico, reagendamento, cancelamento, comparecimento, venda, troca de vendedor, imutabilidade e bloqueio de escrita direta. O script cria dados fictícios e **desfaz tudo** no final com um erro proposital. O resultado esperado é um erro que começa com `TESTES OK`.
 
 ### Regras de segurança

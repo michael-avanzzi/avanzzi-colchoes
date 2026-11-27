@@ -5,6 +5,7 @@ import {
   LayoutDashboard,
   ListChecks,
   Trophy,
+  Truck,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -24,8 +25,9 @@ type ItemMenu = {
 }
 
 const MENU: ItemMenu[] = [
-  { to: '/', rotulo: 'Meu dia', icone: ListChecks },
-  { to: '/agenda', rotulo: 'Agenda', icone: CalendarDays },
+  { to: '/', rotulo: 'Meu dia', icone: ListChecks, papeis: ['vendedor', 'gerente', 'admin'] },
+  { to: '/agenda', rotulo: 'Agenda', icone: CalendarDays, papeis: ['vendedor', 'gerente', 'admin'] },
+  { to: '/entregas', rotulo: 'Entregas', icone: Truck, papeis: ['vendedor', 'gerente', 'admin', 'logistica'] },
   { to: '/ranking', rotulo: 'Ranking', icone: Trophy, papeis: ['vendedor', 'gerente', 'admin'] },
   { to: '/painel', rotulo: 'Painel', icone: LayoutDashboard, papeis: ['gerente', 'admin'] },
   { to: '/usuarios', rotulo: 'Usuários', icone: Users, papeis: ['admin'] },

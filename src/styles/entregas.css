@@ -1,0 +1,282 @@
+/* Entregas: semana de entregas. A faixa à esquerda do cartão tem a cor do selo:
+ * verde = pronto/entregue, azul = tem no estoque (adiantar), amarelo = aguardando
+ * fabricante, vermelho = risco de atraso. */
+
+.en-pagina {
+  max-width: 900px;
+}
+
+.en-resumo-pronto {
+  background: #e7f5ec !important;
+  border-color: transparent !important;
+  color: var(--sucesso) !important;
+}
+
+.en-resumo-pronto strong {
+  color: var(--sucesso);
+}
+
+.en-resumo-livre {
+  background: #e8f0fd !important;
+  border-color: transparent !important;
+  color: #1d4ea8 !important;
+}
+
+.en-resumo-livre strong {
+  color: #1d4ea8;
+}
+
+.en-resumo-risco {
+  background: var(--erro-suave) !important;
+  border-color: transparent !important;
+  color: var(--erro) !important;
+}
+
+.en-resumo-risco strong {
+  color: var(--erro);
+}
+
+/* ---------- Atrasadas ---------- */
+
+.en-atrasadas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.en-atrasadas-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 1px solid #f2c4c4;
+  border-radius: 14px;
+  background: var(--erro-suave);
+  color: var(--erro);
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.en-atrasadas-topo span {
+  flex: 1;
+}
+
+.en-girado {
+  transform: rotate(180deg);
+}
+
+/* ---------- Dias ---------- */
+
+.en-dias {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.en-dia {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.en-dia-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--borda);
+}
+
+.en-dia-topo h2 {
+  font-size: 1.05rem;
+}
+
+.en-dia-hoje .en-dia-topo {
+  border-bottom-color: var(--marca);
+}
+
+.en-dia-hoje .en-dia-topo h2 {
+  color: var(--marca);
+}
+
+.en-dia-passado .en-dia-topo h2 {
+  color: var(--texto-suave);
+}
+
+.en-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Cartão ---------- */
+
+.en-cartao {
+  --cor: var(--borda);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-left: 6px solid var(--cor);
+  border-radius: 14px;
+}
+
+.en-selo-pronto,
+.en-selo-entregue {
+  --cor: var(--sucesso);
+}
+
+.en-selo-tem_no_estoque {
+  --cor: #2f6fd6;
+}
+
+.en-selo-aguardando {
+  --cor: var(--atencao);
+}
+
+.en-selo-risco {
+  --cor: var(--erro);
+}
+
+.en-selo-entregue {
+  opacity: 0.7;
+}
+
+.en-cartao-topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.en-pedido {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.en-selo {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.en-selo-chip-pronto,
+.en-selo-chip-entregue {
+  background: #e7f5ec;
+  color: var(--sucesso);
+}
+
+.en-selo-chip-tem_no_estoque {
+  background: #e8f0fd;
+  color: #1d4ea8;
+}
+
+.en-selo-chip-aguardando {
+  background: var(--atencao-suave);
+  color: var(--atencao-texto);
+}
+
+.en-selo-chip-risco {
+  background: var(--erro-suave);
+  color: var(--erro);
+}
+
+.en-cliente {
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.en-local {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.en-endereco,
+.en-obs {
+  font-size: 0.82rem;
+  color: var(--texto-suave);
+}
+
+.en-obs {
+  font-style: italic;
+}
+
+/* ---------- Itens ---------- */
+
+.en-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0 2px;
+  padding: 8px 0 0;
+  border-top: 1px dashed var(--borda);
+  list-style: none;
+}
+
+.en-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 10px;
+  font-size: 0.85rem;
+}
+
+.en-item-nome {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.en-estoque {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.en-estoque-ok {
+  background: #e7f5ec;
+  color: var(--sucesso);
+}
+
+.en-estoque-livre {
+  background: #e8f0fd;
+  color: #1d4ea8;
+}
+
+.en-estoque-falta {
+  background: var(--erro-suave);
+  color: var(--erro);
+}
+
+.en-rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.en-detalhes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+}

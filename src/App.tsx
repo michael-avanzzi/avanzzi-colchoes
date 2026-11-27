@@ -4,6 +4,7 @@ import { AuthProvider } from './auth/AuthProvider'
 import { ProtectedRoute } from './auth/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
 import { CalendarioPage } from './pages/CalendarioPage'
+import { EntregasPage } from './pages/EntregasPage'
 import { LoginPage } from './pages/LoginPage'
 import { MeuDiaPage } from './pages/MeuDiaPage'
 import { PainelPage } from './pages/PainelPage'
@@ -35,8 +36,30 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<MeuDiaPage />} />
-            <Route path="agenda" element={<CalendarioPage />} />
+            <Route
+              index
+              element={
+                <ProtectedRoute papeis={['vendedor', 'gerente', 'admin']}>
+                  <MeuDiaPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="agenda"
+              element={
+                <ProtectedRoute papeis={['vendedor', 'gerente', 'admin']}>
+                  <CalendarioPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="entregas"
+              element={
+                <ProtectedRoute papeis={['vendedor', 'gerente', 'admin', 'logistica']}>
+                  <EntregasPage />
+                </ProtectedRoute>
+              }
+            />
             {/* Endereço antigo da agenda. */}
             <Route path="calendario" element={<Navigate to="/agenda" replace />} />
             <Route
