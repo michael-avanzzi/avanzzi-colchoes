@@ -90,12 +90,12 @@ Deno.serve(async (req: Request) => {
     const avisos = (data ?? []) as Aviso[];
     if (avisos.length === 0) return responder({ ok: true, avisos: 0, envios: 0 });
 
-    // Aparelhos de usuários ativos (a conta da TV não recebe push).
+    // Aparelhos de usuários ativos (a TV e a logística não recebem avisos de vendas).
     const { data: perfis, error: perfisErro } = await admin
       .from("perfis")
       .select("id")
       .eq("ativo", true)
-      .neq("papel", "tv");
+      .not("papel", "in", "(tv,logistica)");
     if (perfisErro) throw perfisErro;
     const ids = (perfis ?? []).map((p) => p.id as string);
     if (ids.length === 0) return responder({ ok: true, avisos: avisos.length, envios: 0 });

@@ -2,7 +2,8 @@
  * Avanzzi — sincronização com a API do Syscol (Fábrica de Sistemas).
  *
  * Chamada a cada 10 minutos pelo pg_cron (supabase/agendar_syscol.sql), com o
- * cabeçalho x-segredo. Lê pedidos, itens, funcionários e a meta mensal pela API
+ * cabeçalho x-segredo. Lê pedidos, itens, funcionários, meta mensal, minutas,
+ * cargas, estoque, pedidos de compra e nomes de clientes pela API
  * (https://api.fabricasistemas.com.br), guarda a cópia bruta em syscol.api_linhas
  * e aplica nas tabelas do ranking (syscol_aplicar_api).
  *
@@ -16,19 +17,37 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const API = "https://api.fabricasistemas.com.br/api/v1/database/tables/queries";
 
-// Só as colunas usadas. Telefones, nomes e documentos de clientes ficam de fora.
+// Só as colunas usadas. Do cliente: nome, endereço e telefone de entrega (para a
+// logística); documentos ficam de fora.
 const TABELAS: Record<string, string[]> = {
   pedidos: ["id", "pedidonumero", "criadoem", "registradoem", "alteradoem", "valortotal", "valorprodutos", "desconto", "frete",
     "status", "statusentrega", "vendedorprincipal", "vendedorsecundario", "principalpercvenda", "secundariopercvenda",
     "canceladoem", "canceladomotivo", "valortotalcancelado", "concluidoem", "empresaid", "clienteid", "orcamentoid", "leeadid",
     "cep", "bairro", "cidade", "estado", "sys_alteradoem",
     // Trocas: crédito de itens devolvidos usado no pedido (não conta como venda nova).
-    "pedidocomtroca", "valordevolucao", "vinculodevolucao", "creditogeradovalor"],
+    "pedidocomtroca", "valordevolucao", "vinculodevolucao", "creditogeradovalor",
+    // Entregas: data prometida e endereço de entrega.
+    "promessa_datastatus", "promessa_data1", "promessa_horastatus", "promessa_hora1", "promessadias",
+    "despachado", "datadespacho", "clienteligaentregar", "endereco", "numero", "complemento", "fone1", "fone2"],
   pedidos_itens: ["id", "pedidoid", "produtoid", "item", "quantidade", "descricao", "valorunitario", "valorunitariocheio",
     "customedio", "custoreposicao", "custofinanc", "lucromedio", "lucroreposicao", "vendedorid", "canceladoem", "data",
-    "brinde", "servico", "empresaid", "largura", "comprimento", "altura"],
+    "brinde", "servico", "empresaid", "largura", "comprimento", "altura",
+    // Entregas: situação do item, carga e pedido de compra ao fabricante.
+    "entrega", "cargaid", "ordementrega", "itemminutaid", "pedidocompraitemid", "depositoid", "concluidoem"],
   funcionarios: ["id", "nome", "cargo", "excluido"],
   mapa_metamensal: ["id", "mesref", "meta", "empresaid", "diasvenda", "metafaturamento"],
+  // Entregas (tela Entregas)
+  minuta: ["id", "pedidoid", "tipominuta", "datavenda", "dataentrega", "cargaid", "clienteid", "clientenome", "clientecep",
+    "clienteendereco", "clientecomplemento", "clientebairro", "clientecidade", "clienteestado", "clientetelefone1",
+    "clientetelefone2", "clientepontoreferencia", "observacoes", "statusentrega", "entregaagendada", "ordementrega",
+    "status", "clienterecebeu", "clienterecebeuem", "vendedorid", "valorfrete"],
+  cargas: ["id", "descricao", "status", "datasaida", "dataretorno", "datacriacao", "datadespacho", "tipoentrega",
+    "responsavelid", "veiculoid", "distanciaestimada", "conclusaodata"],
+  estoque_posicao: ["id", "produtoid", "descricao", "depositosaldo", "depositoreservado", "depositotransito",
+    "saldoimediato", "saldoshowroom", "entregafutura", "aguardandofabricar", "reservaordenado"],
+  pedidocompra: ["id", "dataemissao", "fabricanteid", "concluido", "concluidoem", "enviado", "confirmardo", "entregaprevista", "pedidotipo"],
+  pedidocompra_itens: ["id", "pedidoid", "produtoid", "quantidade", "saldo"],
+  clientes: ["id", "nome"],
 };
 
 function chaveAdmin() {
